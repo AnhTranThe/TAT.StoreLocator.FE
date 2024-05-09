@@ -1,0 +1,13 @@
+export const SET_ACTIVE_TAB = "SET_ACTIVE_TAB";
+
+// API USER
+export const GET_USER_ALL = "GET_USER_ALL";
+export const GET_USER_BY_ID = "GET_USER_BY_ID";
+export const CREATE_USER = "CREATE_USER";
+export const UPDATE_USER = "UPDATE_USER";
+export const DELETE_USER = "UPDATE_USER";
+export const GET_USER_LOGIN_INFO = "GET_USER_LOGIN_INFO";
+export const GET_USERS_J0IN_IN_PROJECT = "GET_USERS_J0IN_IN_PROJECT";
+
+// THEME
+export const SET_THEME = "SET_THEME";
