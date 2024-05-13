@@ -2,8 +2,12 @@
 import { PrimeReactContext } from "primereact/api";
 import { Avatar } from "primereact/avatar";
 import { Button } from "primereact/button";
+import { InputSwitch } from "primereact/inputswitch";
 import { Menu } from "primereact/menu";
 import { MenuItem } from "primereact/menuitem";
+import { Ripple } from "primereact/ripple";
+import { Sidebar } from "primereact/sidebar";
+import { StyleClass } from "primereact/styleclass";
 import { useContext, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from 'styled-components';
@@ -17,64 +21,28 @@ import { useAppDispatch } from "../../store/store";
 import { LayoutConfig } from "../../types/layout";
 
 
+
 export default function ClientAppTopbar() {
 
   interface HeaderProps {
-    IsDarkTheme: boolean;
+    isdarktheme: string;
   }
-  interface ButtonNavProps {
-    activeTab: string;
-  }
+
   const StyledHeader = styled.header<HeaderProps>`
    display: flex;
   z-index: 5;
   position: relative;
   width: 100%;
-  padding: 1rem 2.5rem;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  background-color:  ${(props) => (props.IsDarkTheme ? '#173EAD' : '#1D4ED8')};
+  border-bottom: 1px solid #dddddd;
+  background-color:  ${(props) => (props.isdarktheme === "true" ? '#173EAD' : '#1D4ED8')};
   color: ${(props) => props.theme.textColor};
-  font-weight: 600;
-  `
-  const StyledButton = styled.button<ButtonNavProps>`
-  background: ${(props) => (props.activeTab == "home" ? 'black' : 'none')};
-  color: white;
-  font-weight: bold;
-  padding: 0.5rem 1rem;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s;
+  font-weight: 600;`
 
-  &:hover {
-    background: black;
-  }
-`;
 
-  const StyledLink = styled(Link)`
-  text-decoration: none;
-  color: white;
-  font-weight: bold;
-  font-size: 1.125rem;
-  position: relative;
-  transition: color 0.3s;
-  background-color: transparent;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  &.active-link {
-    background-color: black;
-    border-radius: 10px;
-  }
-
-  &:hover {
-    
-    background-color: black;
-    border-radius: 10px;
-  }
-`;
   const dispatch = useAppDispatch();
-  const { IsDarkTheme }: { IsDarkTheme: boolean } = useAppSelector(
+  const { isDarkTheme }: { isDarkTheme: boolean } = useAppSelector(
     (state: IThemeReducer) => state.themeReducer
   );
   const { activeTab }: { activeTab: string } = useAppSelector(
@@ -83,6 +51,9 @@ export default function ClientAppTopbar() {
   const { userLoginInfo }: { userLoginInfo: IUserLogInInfoModel } = useAppSelector(
     (state) => state.userReducer
   );
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const menuMobileProfileRef = useRef<any>(null);
+
 
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const { layoutConfig, setLayoutConfig } = useContext(LayoutContext);
@@ -98,10 +69,10 @@ export default function ClientAppTopbar() {
     });
   };
   useEffect(() => {
-    IsDarkTheme
+    isDarkTheme
       ? _changeTheme("soho-dark", "dark")
       : _changeTheme("soho-light", "light");
-  }, [IsDarkTheme]);
+  }, [isDarkTheme]);
   const menuRef = useRef<Menu>(null);
   const nav = useNavigate();
   const handleLogout = () => {
@@ -131,9 +102,9 @@ export default function ClientAppTopbar() {
       template: () => {
         return (
 
-          <StyledLink className={`  ${activeTab === "home" ? "active-link" : ""}`}
+          <Link className={`p-button p-component p-button-text text-white hover:bg-black-alpha-90  ${activeTab === "home" ? "bg-black-alpha-90" : ""}`}
 
-            to="/">Home</StyledLink>
+            to="/">Home</Link>
         );
       },
     },
@@ -141,9 +112,9 @@ export default function ClientAppTopbar() {
       template: () => {
         return (
 
-          <StyledLink className={`${activeTab === "properties" ? "active-link" : ""}`}
+          <Link className={`p-button p-component p-button-text text-white hover:bg-black-alpha-90  ${activeTab === "properties" ? "bg-black-alpha-90" : ""}`}
 
-            to="/Properties">Properties</StyledLink>
+            to="/Properties">Properties</Link>
         );
       },
     }
@@ -153,33 +124,55 @@ export default function ClientAppTopbar() {
   ];
   const itemRights: IMenuItem[] = [
     {
-      label: "Github",
-      icon: "/public/imgs/github-mark.png",
-      class: `circle-button ${!IsDarkTheme ? "p-button-light" : ""}`,
-      command: () => {
-        window.open(
-          "https://github.com/AnhTranThe/FA.Project-Management",
-          "_blank"
+      template: () => {
+        return (
+          <Button
+            onClick={() => {
+              window.open(
+                "https://github.com/AnhTranThe/FA.Project-Management",
+                "_blank"
+              );
+            }}
+            className={`circle-button ${!isDarkTheme ? "p-button-light" : ""}`}
+
+          >
+            <img alt="logo" src={"/public/imgs/github-mark.png"} className="icon" />
+
+
+          </Button>
+
         );
       },
     },
     {
-      class: `circle-button  pi ${!IsDarkTheme ? "pi-sun p-button-light" : "pi-sun p-button-dark"
-        }`,
-      command: () => {
-        dispatch(setTheme(!IsDarkTheme));
+
+      template: () => {
+        return (
+          <Button
+            rounded
+            onClick={() => {
+              dispatch(setTheme(!isDarkTheme));
+            }
+            }
+            icon="pi pi-sun"
+            className={` circle-button ${!isDarkTheme ? "p-button-light" : "p-button-dark"}`}
+          >
+          </Button>
+
+        );
       },
     },
+
     {
-      class: `circle-button  pi ${!IsDarkTheme ? "pi-user p-button-light" : "pi-user p-button-dark"
-        }`,
-      command: handleProfileButtonClick,
-      items: [
-        {
-          label: "Log out",
-          icon: "pi pi-fw pi-sign-out",
-        },
-      ],
+      template: () => {
+        return (
+          <Link className={`bg-black-alpha-40 hover:bg-black-alpha-90 border-round text-white p-button `}
+            to="/auth/login">Login or Register</Link>
+
+
+
+        );
+      },
     },
   ];
   const profileMenuItems: MenuItem[] = [
@@ -219,48 +212,193 @@ export default function ClientAppTopbar() {
       },
     },
   ];
-
-
   return (
     <>
-      <StyledHeader IsDarkTheme={IsDarkTheme} >
-        <div className="flex align-items-center gap-2">
-          {itemLeft.map((item, index) => (
-            <div key={index}>
-              {item.template && item.template()} {/* Render the template function later */}
+      <StyledHeader className="mx-auto md:px-3 md:py-3 sm: px-1 sm: py-1 " isdarktheme={isDarkTheme.toString()} >
+        <div className="relative flex h-3rem  align-items-center w-full ">
+          {/* Content for mobile screens */}
+          <div className="main-menu-mobile-mode w-full">
+            <div className="absolute top-0  flex  w-full">
+              <Button
+                rounded
+                text
+                className="text-white "
+                onClick={() => {
+                  setIsMobileMenuOpen(prev => !prev)
+                }
+                }
+                icon="pi pi-bars"
+              >
+              </Button>
+            </div>
+            <div className="flex flex-column justify-content-center align-items-center w-full">
+              <Link className="text-xl font-bold flex align-items-center text-white pr-2 "
+                to="/">
+                <img
+                  alt="logo"
+                  src="/public/imgs/Logo/logo-white.png"
+                  className="h-2rem"></img>
+                <label className="text-2xl pl-2 cursor-pointer">Store Locator</label>
+              </Link>
+              {isMobileMenuOpen && (
+                <Sidebar
+                  visible={isMobileMenuOpen}
+                  onHide={() => setIsMobileMenuOpen(false)}
+                  content={({ closeIconRef, hide }) => (
+                    <div className="flex relative h-full ">
+                      <div className="surface-section w-full" >
+                        <div className="flex flex-column h-full">
+                          <div className="flex align-items-center justify-content-between px-4 pt-3 flex-shrink-0">
+                            <span className="inline-flex align-items-center gap-2">
+                              <img
+                                alt="logo"
+                                src="/public/imgs/Logo/logo-dark.png"
+                                className="h-2rem"></img>
+                              <span className="font-semibold text-2xl text-primary">Store Locator</span>
+                            </span>
+                            <span>
+                              <Button type="button" ref={closeIconRef} onClick={(e) => hide(e)} icon="pi pi-times" rounded outlined className="h-2rem w-2rem"></Button>
+                            </span>
+                          </div>
+                          <div className="overflow-y-auto">
+                            <ul className="list-none p-3 m-0">
+                              <ul className="list-none p-0 mb-2 overflow-hidden ">
+                                <li >
+                                  <Link onClick={() => { setIsMobileMenuOpen(prev => !prev) }} to={"/"} className={`p-ripple flex align-items-center mb-2 cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full  ${activeTab === "home" ? "bg-black-alpha-90 text-white" : ""} `}>
+
+                                    <i className="pi pi-home mr-2 text-xl"></i>
+                                    <span className="text-xl">Dashboard</span>
+                                    <Ripple />
+                                  </Link>
+                                </li>
+                                <li >
+                                  <Link to={"/Properties"} className={`p-ripple flex align-items-center mb-2 cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full ${activeTab === "properties" ? "bg-black-alpha-90 text-white" : ""}`}>
+
+                                    <i className="pi pi-sign-in mr-2 text-xl"></i>
+                                    <span className="text-xl">Properties</span>
+                                    <Ripple />
+                                  </Link>
+                                </li>
+
+                                <li >
+                                  <Link to={"/auth/login"} className={`p-ripple flex align-items-center mb-2 cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full bg-indigo-400 active:bg-indigo-500 text-white`}>
+
+                                    <i className="pi pi-sign-in mr-2 text-xl"></i>
+                                    <span className="text-xl">Login or Register</span>
+                                    <Ripple />
+                                  </Link>
+                                </li>
+
+                              </ul>
+                            </ul>
+                          </div>
+                          <div className="overflow-y-auto">
+                            <hr className="mb-3 mx-3 border-top-1 border-none surface-border" />
+
+                            <div className="m-3">
+                              <StyleClass nodeRef={menuMobileProfileRef} selector="@next" enterClassName="hidden" enterActiveClassName="slidedown" leaveToClassName="hidden" leaveActiveClassName="slideup">
+                                <div ref={menuMobileProfileRef} className="p-ripple  flex align-items-center justify-content-between text-600 cursor-pointer">
+                                  <a v-ripple className=" flex align-items-center  cursor-pointer p-3 gap-2 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+                                    <Avatar image="https://primefaces.org/cdn/primereact/images/avatar/amyelsner.png" shape="circle" />
+                                    <span className="font-bold">Amy Elsner</span>
+                                  </a>
+                                  <i className="pi pi-chevron-down"></i>
+                                  <Ripple />
+                                </div>
+                              </StyleClass>
+                              <ul className="list-none p-0 m-0 overflow-hidden">
+                                <li>
+                                  <a className="p-ripple flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full">
+                                    <i className="pi pi-folder mr-2"></i>
+                                    <span className="font-medium">Projects</span>
+                                    <Ripple />
+                                  </a>
+                                </li>
+                                <li>
+                                  <a className="p-ripple flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full">
+                                    <i className="pi pi-chart-bar mr-2"></i>
+                                    <span className="font-medium">Performance</span>
+                                    <Ripple />
+                                  </a>
+                                </li>
+                                <li>
+                                  <a className="p-ripple flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full">
+                                    <i className="pi pi-cog mr-2"></i>
+                                    <span className="font-medium">Settings</span>
+                                    <Ripple />
+                                  </a>
+                                </li>
+                              </ul>
+                            </div>
+
+                          </div>
+                          <div className="overflow-y-auto">
+                            <hr className="mb-3 mx-3 border-top-1 border-none surface-border" />
+                            <div className="m-3 flex justify-content-center gap-3 align-items-center">
+                              <label>Light</label>
+                              <InputSwitch checked={isDarkTheme as boolean} onChange={() => dispatch(setTheme(!isDarkTheme))}></InputSwitch>
+                              <label>Dark</label>
+
+                            </div>
+
+
+                          </div>
+                          <div className="m-3 flex justify-content-center   align-items-center">
+
+                            <span className="mr-2">  Make by</span>
+
+                            <a href="https://github.com/AnhTranThe/">
+                              <span className="mr-2">The Anh</span>
+                              <i className="pi pi-heart-fill" style={{ color: 'slateblue' }}></i>
+
+                            </a>
+
+                          </div>
+
+
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                ></Sidebar>
+              )
+
+
+
+              }
+
             </div>
 
 
+          </div>
+          {/* Content for desktop screens */}
+          <div className="main-menu-desktop-mode w-full  ">
+            <div className=" flex justify-content-between w-full mx-auto col-10 ">
+              <div className=" flex align-items-center gap-2  ">
+                {itemLeft.map((item, index) => (
+                  <div key={index}>
+                    {item.template && item.template()} {/* Render the template function later */}
+                  </div>
+                ))}
+              </div>
 
+              <div className=" flex align-items-center gap-3 ">
+                {itemRights.map((item, index) => (
+                  <div key={index}>
+                    {item.template && item.template()} {/* Render the template function later */}
+                  </div>
+                ))}
 
-
-
-
-
-          ))}
-        </div>
-        <div className="flex gap-3">
-          {itemRights.map((item, index) => (
-            <Button
-              key={index}
-              onClick={item.command}
-              className={item.class}
-              aria-label={item.label}
-              severity="secondary">
-              {item.icon && <img alt="logo" src={item.icon} className="icon" />}
-              {item.label && (
-                <label className="text-xl text-white">{item.label}</label>
-              )}
-            </Button>
-          ))}
-
-          <Menu
-            className="w-auto p-3 mt-3 surface-card"
-            style={{ boxShadow: '0 1px 10px #818CF8' }}
-            model={profileMenuItems}
-            popup
-            ref={menuRef}
-          />
+                <Menu
+                  className="w-auto p-3 mt-3 surface-card"
+                  style={{ boxShadow: '0 1px 10px #818CF8' }}
+                  model={profileMenuItems}
+                  popup
+                  ref={menuRef}
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </StyledHeader>
     </>

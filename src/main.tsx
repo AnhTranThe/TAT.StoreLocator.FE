@@ -11,6 +11,7 @@ import './styles/demo/Demos.scss'
 import './styles/layout/layout.scss'
 import './styles/style/style.scss'
 import 'primereact/resources/themes/soho-light/theme.css';
+import "mapbox-gl/dist/mapbox-gl.css";
 
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

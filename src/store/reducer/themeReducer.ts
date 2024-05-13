@@ -4,15 +4,15 @@ import { SET_THEME } from "../type/actionType";
 
 export interface IThemeReducer {
   themeReducer: {
-    IsDarkTheme: boolean;
+    isDarkTheme: boolean;
   };
 }
 export interface IThemeModelResponse {
-  IsDarkTheme: boolean;
+  isDarkTheme: boolean;
 }
 
 const initialState: IThemeModelResponse = {
-  IsDarkTheme: true, // Set initial value
+  isDarkTheme: true, // Set initial value
 };
 
 const themeReducer = (
@@ -23,7 +23,7 @@ const themeReducer = (
     case SET_THEME: {
       return {
         ...state,
-        IsDarkTheme: payload.IsDarkTheme,
+        isDarkTheme: payload.isDarkTheme,
       };
     }
     default:

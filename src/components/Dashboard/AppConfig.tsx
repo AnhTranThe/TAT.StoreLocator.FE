@@ -21,16 +21,16 @@ const AppConfig = (props: AppConfigProps) => {
     useContext(LayoutContext);
   const { setRipple, changeTheme } = useContext(PrimeReactContext);
 
-  const { IsDarkTheme } = useAppSelector(
+  const { isDarkTheme } = useAppSelector(
     (state: IThemeReducer) => state.themeReducer
   );
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    IsDarkTheme
+    isDarkTheme
       ? _changeTheme("soho-dark", "dark")
       : _changeTheme("soho-light", "light");
-  }, [IsDarkTheme]);
+  }, [isDarkTheme]);
 
   const onConfigButtonClick = () => {
     setLayoutState((prevState: LayoutState) => ({

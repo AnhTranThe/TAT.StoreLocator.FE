@@ -23,3 +23,8 @@ export interface IModel {
 export interface IProjectProps {
   projectName: string;
 }
+
+export interface ISelectBoxValue {
+  name: string;
+  value: string;
+}

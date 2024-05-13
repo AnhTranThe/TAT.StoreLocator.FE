@@ -1,0 +1,11 @@
+.p-image-preview-container > img {
+  border-radius: 20px;
+}
+.custom-scrollbar::-webkit-scrollbar {
+  width: 0px; /* This will hide the scrollbar in WebKit browsers */
+}
+
+.custom-scrollbar {
+  scrollbar-width: none; /* This will hide the scrollbar in Firefox */
+  -ms-overflow-style: none; /* This will hide the scrollbar in Internet Explorer/Edge */
+}

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import ClientAppTopbar from "./ClientAppTopbar";
+import ClientAppFooter from "./ClientAppFooter";
 
 
 export default function ClientAppLayout(props: any) {
@@ -11,6 +12,7 @@ export default function ClientAppLayout(props: any) {
 
             <ClientAppTopbar />
             <div className="layout-main">{props.children}</div>
+            <ClientAppFooter />
 
 
         </React.Fragment>

@@ -98,7 +98,9 @@
 
 .client-layout-sidebar {
   overflow-y: auto;
-  user-select: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
   left: 0;
   height: inherit;
   transition: all 0.3s ease-in;
@@ -164,6 +166,22 @@
   text-decoration: underline; /* Apply text decoration to the label when hovering */
 }
 
+@media all and (min-width: 650px) {
+  .main-menu-desktop-mode {
+    display: block;
+  }
+  .main-menu-mobile-mode {
+    display: none;
+  }
+}
+@media all and (max-width: 649px) {
+  .main-menu-desktop-mode {
+    display: none;
+  }
+  .main-menu-mobile-mode {
+    display: block;
+  }
+}
 .p-dialog-mask #pr_id_2 .form__project .card__container {
   padding: 0.75rem !important;
 }

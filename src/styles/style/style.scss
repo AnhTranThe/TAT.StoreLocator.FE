@@ -161,4 +161,22 @@
   text-decoration: underline; /* Apply text decoration to the label when hovering */
 }
 
+@media all and (min-width: 650px) {
+  .main-menu-desktop-mode {
+    display: block;
+  }
+  .main-menu-mobile-mode {
+    display: none;
+  }
+}
+
+@media all and (max-width: 649px) {
+  .main-menu-desktop-mode {
+    display: none;
+  }
+  .main-menu-mobile-mode {
+    display: block;
+  }
+}
+
 @import "./page/ProjectUser";

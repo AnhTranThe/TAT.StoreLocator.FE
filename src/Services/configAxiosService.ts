@@ -1,8 +1,9 @@
 import axios from "axios";
-const BASE_URL = "http://localhost:8080/api";
+
+const baseUrl = "locahost";
 // Tạo một instance Axios
 const axiosInstance = axios.create({
-  baseURL: BASE_URL,
+  baseURL: baseUrl,
   timeout: 5000,
 });
 
@@ -42,7 +43,7 @@ axiosInstance.interceptors.response.use(
           const parseRefeshToken = JSON.parse(refeshToken);
           const response = await axios({
             method: "get",
-            url: BASE_URL + "/refresh-token",
+            url: baseUrl + "/refresh-token",
             headers: {
               Authorization: "Bearer " + `${parseRefeshToken.refresh_token}`,
             },
