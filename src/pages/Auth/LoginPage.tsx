@@ -1,48 +1,46 @@
+import { useFormik } from "formik";
+import { PrimeReactContext } from "primereact/api";
 import { Button } from "primereact/button";
-import { Checkbox } from "primereact/checkbox";
-import { Dropdown } from "primereact/dropdown";
-import { InputSwitch } from "primereact/inputswitch";
-import { useContext, useState } from "react";
+import { InputText } from "primereact/inputtext";
+import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { IDecodeAccessTokenModel } from "../../models/loginModel";
+import { adminRoleName } from "../../constants";
+import { useAppSelector } from "../../hooks/ReduxHook";
+import { ILoginRequestModel, ILoginResponseModel, IUserSaveInfoModel } from "../../models/authModel";
 import { loginService } from "../../Services/authServiceApi";
+import { setTheme } from "../../store/action/themeAction";
 import { getUserLoginInfo } from "../../store/action/userAction";
+import { IThemeReducer } from "../../store/reducer/themeReducer";
 import { useAppDispatch } from "../../store/store";
+import { LayoutConfig } from "../../types/layout";
 import { decodeJwtToken } from "../../utils/Utilities";
+import { validateSignIn } from '../../utils/yup';
+import { LayoutContext } from "../context/layoutcontext";
 import { IToastValueContext, ToastContext } from "../context/toastContext";
 
 const LoginPage = () => {
-  const [detailLogin, setDetailLogin] = useState({ email: "", password: "" });
-  const [checked, setChecked] = useState(false);
-  const [switchValue, setSwitchValue] = useState(false);
-  const [selectedEmail, setSelectedEmail] = useState<string>("");
-  const dispatch = useAppDispatch();
-  const emailOpts = [{
-    email: "admin@gmail.com"
-  },
-  {
-    email: "tester@gmail.com"
+  const InitialValues: ILoginRequestModel = {
+    emailOrUserName: "",
+    password: "",
   }
-  ]
   const { setShowModelToast } = useContext<IToastValueContext>(ToastContext);
-
-  // const { layoutConfig } = useContext(LayoutContext);
-
+  const [showPassword, setShowPassword] = useState(false);
+  const handleToggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
   const navigate = useNavigate();
-
-  const handleLogin = async () => {
-    if (detailLogin.email && detailLogin.password) {
-      const data = await loginService(detailLogin);
-
+  const dispatch = useAppDispatch();
+  const handleSignIn = async (request: ILoginRequestModel) => {
+    if (request.emailOrUserName && request.password) {
+      const data: ILoginResponseModel = await loginService(request);
       if (data) {
-        const decodeAccessToken = decodeJwtToken(data.access_token) as IDecodeAccessTokenModel;
-        data.role = decodeAccessToken.role;
-        dispatch(getUserLoginInfo(decodeAccessToken.id, decodeAccessToken.email, decodeAccessToken.user_name, decodeAccessToken.role))
+        const decodeAccessToken = decodeJwtToken(data.token) as IUserSaveInfoModel;
+        dispatch(getUserLoginInfo(decodeAccessToken.id, decodeAccessToken.email, decodeAccessToken.firstName, decodeAccessToken.roles))
         localStorage.setItem("Token", JSON.stringify(data));
-        if (data.role === 1) {
-          navigate("/");
+        if (decodeAccessToken.roles === adminRoleName) {
+          navigate("/admin");
         } else {
-          navigate("/client/projects");
+          navigate("/");
         }
         setShowModelToast((pre) => {
           return {
@@ -76,15 +74,37 @@ const LoginPage = () => {
       return;
     }
   };
+  const { isDarkTheme }: { isDarkTheme: boolean } = useAppSelector(
+    (state: IThemeReducer) => state.themeReducer
+  );
+  const { layoutConfig, setLayoutConfig } = useContext(LayoutContext);
+  const { changeTheme } = useContext(PrimeReactContext);
+  const _changeTheme = (theme: string, colorScheme: string) => {
+    changeTheme?.(layoutConfig.theme, theme, "theme-css", () => {
+      setLayoutConfig((prevState: LayoutConfig) => ({
+        ...prevState,
+        theme,
+        colorScheme,
+      }));
+    });
+  };
+  useEffect(() => {
+    isDarkTheme
+      ? _changeTheme("soho-dark", "dark")
+      : _changeTheme("soho-light", "light");
+  }, [isDarkTheme]);
+  const { values, setValues, handleChange, handleBlur, handleSubmit, errors, touched, setErrors, setTouched } = useFormik({
 
-  // const handleChangeDetailUser = (event: ChangeEvent<HTMLInputElement>) => {
-  //   setDetailLogin((pre) => {
-  //     return { ...pre, [event.target.id]: event.target.value };
-  //   });
-  // };
+    initialValues: InitialValues,
+    validationSchema: validateSignIn,
+    onSubmit: (value) => {
+      handleSignIn(value);
+    },
+  });
+
 
   return (
-    <div className="flex flex-column align-items-center justify-content-center">
+    <div className="flex flex-column align-items-center justify-content-center Signup ">
       <div
         style={{
           borderRadius: "56px",
@@ -93,95 +113,111 @@ const LoginPage = () => {
             "linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)",
         }}>
         <div
-          className="w-full surface-card py-8 px-5 sm:px-8"
+          className="w-full surface-card py-4 px-5 sm:px-8 "
           style={{ borderRadius: "53px" }}>
           <div className="text-center mb-5">
             <div className="text-900 text-3xl font-medium mb-3">Welcome!!</div>
-            <span className="text-600 font-medium">Sign in to continue</span>
+            <span className="text-600 font-medium">
+              Sign in to continue with App...
+            </span>
           </div>
 
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-900 text-xl font-medium mb-2">
-              Email
-            </label>
+          <form onSubmit={handleSubmit}>
 
-            <Dropdown
-              value={selectedEmail}
-              onChange={(e) => {
-                const selectedEmailAddress = e.value.email; // Extract email address from the object
-                setSelectedEmail(e.value); // Update selectedEmail state
-                setDetailLogin((prev) => ({
-                  ...prev,
-                  email: selectedEmailAddress,
-                  password: "admin",
-                }));
-              }}
-              options={emailOpts}
-              optionLabel="email"
-              placeholder="Select Email"
-              className="w-full md:w-30rem mb-5"
-            />
-            {/* <InputText
-              id="email"
-              type="text"
-              placeholder="email..."
-              className="w-full md:w-30rem mb-5"
-              style={{ padding: "1rem" }}
-              onChange={handleChangeDetailUser}
-            />
-            <label
-              htmlFor="password"
-              className="block text-900 font-medium text-xl mb-2">
-              Password
-            </label>
-            <InputText
-              onChange={handleChangeDetailUser}
-              id="password"
-              placeholder="password..."
-              className="w-full mb-5"
-              data-pr-classname="w-full p-3 md:w-30rem"></InputText> */}
 
-            <div className="flex align-items-center justify-content-between mb-5 gap-5">
-              <div className="flex align-items-center">
-                <Checkbox
-                  inputId="rememberme1"
-                  checked={checked}
-                  onChange={(e) => setChecked(e.checked || false)}
-                  className="mr-2"></Checkbox>
-                <label htmlFor="rememberme1">Remember me</label>
+            <div className="item-form mb-3">
+              <label
+                htmlFor="emailOrUserName"
+                className="block text-900 text-sm ml-1 font-medium mb-2">
+                Email or Username
+              </label>
+
+              <InputText
+                id="emailOrUserName"
+                type="text"
+                placeholder="Email or Username..."
+                className="w-full md:w-30rem"
+                value={values.emailOrUserName}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+              <br />
+
+              <div className="my-3 pl-2">
+                {errors.emailOrUserName && touched.emailOrUserName && (
+                  <span className="text-red-500 my-3">{errors.emailOrUserName}</span>
+                )}
               </div>
-              <a
-                className="font-medium no-underline ml-2 text-right cursor-pointer"
-                style={{ color: "var(--primary-color)" }}>
-                Forgot password?
-              </a>
+
             </div>
-            <div className="flex align-items-center justify-content-between mb-5 gap-2">
-              <div className="flex align-items-center">
-                <InputSwitch
-                  checked={switchValue}
-                  onChange={(e) => setSwitchValue(e.value)}
-                  className="mr-2"
-                />
-                <label htmlFor="rememberme1">Switch dark/light</label>
+
+            <div className="item-form mb-5">
+              <label
+                htmlFor="password"
+                className="block text-900 font-medium text-sm ml-1 mb-2">
+                Password
+              </label>
+
+              <div className="p-inputgroup flex-1">
+
+                <InputText
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password..."
+                  required
+                  className="w-full"
+                  data-pr-classname="w-full p-3 md:w-30rem"
+                  value={values.password}
+                  onChange={handleChange}
+                  onBlur={handleBlur}></InputText>
+                <Button onClick={handleToggleShowPassword} icon={`pi ${showPassword ? 'pi-eye-slash' : 'pi-eye'}`} className="p-button" />
               </div>
-              <Link to={"/auth/signup"}>
-                <p className="p-3 text-sm font-bold underline text-blue-400 cursor-pointer">
-                  Sign Up
-                </p>
+
+              <div className="my-3 pl-2">
+                {errors.password && touched.password && (
+                  <span className="text-red-500 my-3">{errors.password}</span>
+                )}
+              </div>
+
+            </div>
+
+            <div className="flex gap-2 mb-5">
+              <Button
+                onClick={() => {
+                  setValues(InitialValues)
+                  setErrors({})
+                  setTouched({})
+                }}
+                label="Clear"
+                severity="warning"
+                className="w-full p-3 text-xl">
+
+              </Button>
+              <Button
+                type="submit"
+                label="Sign In"
+                className="w-full p-3 text-xl"></Button>
+            </div>
+            <div className="m-3 flex justify-content-between gap-3 align-items-center">
+              <Link title="Go home" className="pi pi-home text-3xl" to={"/"}>
+
               </Link>
+              <a title="Change theme"
+                onClick={() => dispatch(setTheme(!isDarkTheme))}
+                className={`pi cursor-pointer text-3xl ${isDarkTheme ? 'pi-moon' : 'pi-sun'}`}
+              >
+              </a>
+
+              <Link title="Sign up" className="pi pi-user-plus text-3xl" to={"/auth/signup"}>
+
+              </Link>
+
             </div>
 
-            <Button
-              label="Sign In"
-              className="w-full p-3 text-xl"
-              onClick={handleLogin}></Button>
-          </div>
+          </form>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 

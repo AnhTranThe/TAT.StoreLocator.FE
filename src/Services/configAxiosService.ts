@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseUrl = "locahost";
+const baseUrl = "https://localhost:7128/api/";
 // Tạo một instance Axios
 const axiosInstance = axios.create({
   baseURL: baseUrl,

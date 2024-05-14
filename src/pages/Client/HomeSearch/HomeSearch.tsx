@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { getListDistrictsService, getListProvincesService, getListWardsService } from "../../../Services/addressServiceApi";
 import { useAppSelector } from "../../../hooks/ReduxHook";
-import { ISelectBoxValue } from "../../../models/commonModel";
+import { ISelectBoxValueModel } from "../../../models/commonModel";
 import { IOApiDistrictModel, IOApiProvinceModel, IOApiWardModel } from '../../../models/oApiModel';
 import { IThemeReducer } from "../../../store/reducer/themeReducer";
 
@@ -35,10 +35,10 @@ export default function HomeSearch() {
     const [selectProvinceOp, setSelectProvinceOp] = useState<number>(0);
     const [selectDistrictOp, setSelectDistrictOp] = useState<number>(0);
     const [selectWardOp, setSelectWardOp] = useState<number>(0);
-    const [listProvincesOps, setListProvincesOps] = useState<ISelectBoxValue[]>([]);
-    const [listDistrictOps, setListDistrictOps] = useState<ISelectBoxValue[]>([]);
-    const [listWardOps, setListWardOps] = useState<ISelectBoxValue[]>([]);
-    const selectedFilterDropDownTemplate = (option: ISelectBoxValue, props: any) => {
+    const [listProvincesOps, setListProvincesOps] = useState<ISelectBoxValueModel[]>([]);
+    const [listDistrictOps, setListDistrictOps] = useState<ISelectBoxValueModel[]>([]);
+    const [listWardOps, setListWardOps] = useState<ISelectBoxValueModel[]>([]);
+    const selectedFilterDropDownTemplate = (option: ISelectBoxValueModel, props: any) => {
         if (option) {
             return (
                 <div className="flex align-items-center">
@@ -49,7 +49,7 @@ export default function HomeSearch() {
 
         return <span>{props.placeholder}</span>;
     };
-    const filterDropDownOptionTemplate = (option: ISelectBoxValue) => {
+    const filterDropDownOptionTemplate = (option: ISelectBoxValueModel) => {
         return (
             <div className="flex align-items-center">
                 <div>{option.name}</div>

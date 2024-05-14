@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ILoginDetail, ISignUpModel } from "../models/loginModel";
+import { ILoginRequestModel, ISignUpRequestModel } from "../models/authModel";
 import axiosInstance from "./configAxiosService";
 
-export const loginService = async (data: ILoginDetail) => {
+export const loginService = async (request: ILoginRequestModel) => {
   try {
-    const res = await axiosInstance.post("/login", data);
+    const res = await axiosInstance.post("/authentication/login", request);
+    console.log("res", res);
     return res.data;
   } catch (error) {
     console.log(error);
@@ -12,13 +13,11 @@ export const loginService = async (data: ILoginDetail) => {
   }
 };
 
-export const signUpService = async (data: ISignUpModel) => {
+export const signUpService = async (request: ISignUpRequestModel) => {
   try {
-    const res = await axiosInstance.post("/register", data);
+    const res = await axiosInstance.post("/authentication/register", request);
     return res.data;
   } catch (error: any) {
-    console.log(error);
-
     return error.response.data;
   }
 };

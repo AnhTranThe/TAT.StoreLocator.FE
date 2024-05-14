@@ -20,11 +20,13 @@ export interface IModel {
   separator?: boolean;
   disable?: boolean;
 }
-export interface IProjectProps {
-  projectName: string;
-}
 
-export interface ISelectBoxValue {
+export interface ISelectBoxValueModel {
   name: string;
   value: string;
+}
+export interface IBaseResponseModel {
+  message: string;
+  success: boolean;
+  error: string[];
 }

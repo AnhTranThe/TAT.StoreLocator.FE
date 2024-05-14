@@ -44,12 +44,12 @@ export const validateSignUp = yup.object().shape({
     .string()
     .min(2, "Too Short!")
     .max(50, "Too Long!")
-    .required("Required"),
+    .required("Pls!! Fill your first name"),
   lastName: yup
     .string()
     .min(2, "Too Short!")
     .max(50, "Too Long!")
-    .required("Required"),
+    .required("Pls!! Fill your last name"),
   password: yup
     .string()
     .min(8, "Password must be 8 characters long")
@@ -61,19 +61,12 @@ export const validateSignUp = yup.object().shape({
     .string()
     .nullable()
     .oneOf([yup.ref("password"), null], `Must match "password" field value`)
-    .required("Required"),
+    .required("Pls!! Fill confirm password"),
 });
 
 export const validateSignIn = yup.object().shape({
-  email: yup
+  emailOrUserName: yup
     .string()
-    .email("Invailid email")
-    .required("(*) Pls!! Fill your email"),
-  password: yup
-    .string()
-    .min(8, "Password must be 8 characters long")
-    .matches(/[0-9]/, "Password requires a number")
-    .matches(/[a-z]/, "Password requires a lowercase letter")
-    .matches(/[A-Z]/, "Password requires an uppercase letter")
-    .matches(/[^\w]/, "Password requires a symbol"),
+    .required("(*) Pls!! Fill your email or user name"),
+  password: yup.string().required("(*) Pls!! Fill your password"),
 });

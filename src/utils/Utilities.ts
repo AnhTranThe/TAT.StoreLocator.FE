@@ -56,25 +56,9 @@ export const generateRandomImageProject = () => {
   ];
   const randomIndex = Math.floor(Math.random() * imagePaths.length);
   return imagePaths[randomIndex];
-
-  // const randomNumber = Math.floor(Math.random() * 1000);
-  // return `https://picsum.photos/id/${randomNumber}/200/200.jpg`;
 };
 
 export const decodeJwtToken = (token: string) => {
   const decoded = jwtDecode(token);
   return decoded;
 };
-
-// export const initializeBoard = (tasks: ITaskModel[]) => {
-//   const boardSections: BoardSections = {};
-
-//   Object.keys(BOARD_SECTIONS).forEach((boardSectionKey) => {
-//     boardSections[boardSectionKey] = getTasksByStatus(
-//       tasks,
-//       boardSectionKey as Status
-//     );
-//   });
-//   console.log(boardSections);
-//   return boardSections;
-// };

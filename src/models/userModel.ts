@@ -1,19 +1,17 @@
-export interface IUserReducer {
-  userReducer: {
-    listUser: IUserModel[] | [];
-  };
-}
+import { EGenderType } from "../enums";
 
-export interface IUserModel {
-  email: string;
-  name: string;
-  role: number;
-  password: string;
-  id?: string;
-}
-export interface IUserLogInInfoModel {
-  id: string;
-  email: string;
-  user_name: string;
-  role: number;
+export interface IUserResponseModel {
+  Id: string;
+  FullName: string;
+  Email: string;
+  IsActive: boolean;
+  Gender: EGenderType;
+  Dob: string;
+  UserName: string;
+  WishlistProductsCount: number;
+  WishlistStoresCount: number;
+  ReviewProductsCount: number;
+  AccessToken: string;
+  RefreshToken: string;
+  Roles: string[] | null;
 }

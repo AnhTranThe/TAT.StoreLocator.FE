@@ -11,9 +11,10 @@ import { StyleClass } from "primereact/styleclass";
 import { useContext, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from 'styled-components';
+import { userRoleName } from "../../constants";
 import { useAppSelector } from "../../hooks/ReduxHook";
+import { IUserSaveInfoModel } from "../../models/authModel";
 import { IMenuItem } from "../../models/commonModel";
-import { IUserLogInInfoModel } from "../../models/userModel";
 import { LayoutContext } from "../../pages/context/layoutcontext";
 import { setTheme } from "../../store/action/themeAction";
 import { IThemeReducer } from "../../store/reducer/themeReducer";
@@ -48,7 +49,7 @@ export default function ClientAppTopbar() {
   const { activeTab }: { activeTab: string } = useAppSelector(
     (state) => state.tabReducer
   );
-  const { userLoginInfo }: { userLoginInfo: IUserLogInInfoModel } = useAppSelector(
+  const { userLoginInfo }: { userLoginInfo: IUserSaveInfoModel } = useAppSelector(
     (state) => state.userReducer
   );
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -83,6 +84,7 @@ export default function ClientAppTopbar() {
     setProfileDropdownOpen(!profileDropdownOpen);
     menuRef.current?.toggle(event);
   };
+
   const itemLeft: IMenuItem[] = [
     {
       template: () => {
@@ -189,7 +191,7 @@ export default function ClientAppTopbar() {
             <div className="flex flex-column align">
               <span className="font-bold">{userLoginInfo.email}</span>
               <span className="text-sm">
-                {userLoginInfo.role !== 1 ? "customer" : "admin"}
+                {userLoginInfo.roles !== userRoleName ? "customer" : "admin"}
               </span>
             </div>
           </div>

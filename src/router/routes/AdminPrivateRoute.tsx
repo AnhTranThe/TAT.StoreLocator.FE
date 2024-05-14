@@ -1,9 +1,12 @@
 import { useContext, useEffect } from "react";
 import { Navigate } from "react-router-dom";
+import { adminRoleName } from "../../constants";
 import {
   IToastValueContext,
   ToastContext,
 } from "../../pages/context/toastContext";
+import { decodeJwtToken } from "../../utils/Utilities";
+import { IUserSaveInfoModel } from "../../models/authModel";
 
 interface IUserPrivateRouteProps {
   children: React.ReactNode;
@@ -12,9 +15,9 @@ export default function AdminPrivateRoute({
   children,
 }: IUserPrivateRouteProps) {
   const { setShowModelToast } = useContext<IToastValueContext>(ToastContext);
-  const loginDetail = JSON.parse(localStorage.getItem("Token")!);
+  const data = JSON.parse(localStorage.getItem("Token")!);
   useEffect(() => {
-    if (!loginDetail) {
+    if (!data) {
       setShowModelToast((pre) => ({
         ...pre,
         severity: "warn",
@@ -22,23 +25,26 @@ export default function AdminPrivateRoute({
         detail: "Pls!! Login",
       }));
     }
+    console.log("data", data);
 
-    if (loginDetail && loginDetail.role !== 1) {
-      setShowModelToast((pre) => ({
-        ...pre,
-        severity: "warn",
-        summary: "Warning",
-        detail: "User cannot go to page Admin",
-      }));
+    if (data) {
+      const decodeAccessToken = decodeJwtToken(data.token) as IUserSaveInfoModel;
+      if (decodeAccessToken.roles !== adminRoleName) {
+        setShowModelToast((pre) => ({
+          ...pre,
+          severity: "warn",
+          summary: "Warning",
+          detail: "User cannot go to page Admin",
+        }));
+        <Navigate to={"/"} />
+      }
+
+    }
+    else {
+      <Navigate to={"/auth/login"} />
     }
   }, []);
 
-  if (!loginDetail) {
-    return <Navigate to={"/auth/login"} />;
-  }
 
-  if (loginDetail && loginDetail.role !== 1) {
-    return <Navigate to={"/client/projects"} />;
-  }
   return <>{children}</>;
 }
