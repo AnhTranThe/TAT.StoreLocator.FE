@@ -12,7 +12,7 @@ export interface IThemeModelResponse {
 }
 
 const initialState: IThemeModelResponse = {
-  isDarkTheme: true, // Set initial value
+  isDarkTheme: false, // Set initial value
 };
 
 const themeReducer = (

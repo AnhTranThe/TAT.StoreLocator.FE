@@ -15,11 +15,8 @@ export default function MapRender() {
         (state: IThemeReducer) => state.themeReducer
     );
 
-
-
-
     return (
-        <div className="md:col-8 pt-0   " >
+        <>
             <Map
                 mapStyle={
                     !isDarkTheme
@@ -39,6 +36,6 @@ export default function MapRender() {
 
             </Map>
 
-        </div>
+        </>
     )
 }

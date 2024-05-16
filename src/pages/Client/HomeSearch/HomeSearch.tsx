@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
-import { RadioButton } from "primereact/radiobutton";
+import { MultiSelect } from "primereact/multiselect";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { getListDistrictsService, getListProvincesService, getListWardsService } from "../../../Services/addressServiceApi";
@@ -17,6 +17,15 @@ export default function HomeSearch() {
     const { isDarkTheme }: { isDarkTheme: boolean } = useAppSelector(
         (state: IThemeReducer) => state.themeReducer
     );
+    const sampleCategories: ISelectBoxValueModel[] = [
+        { name: 'New York', value: 'NY' },
+        { name: 'Rome', value: 'RM' },
+        { name: 'London', value: 'LDN' },
+        { name: 'Istanbul', value: 'IST' },
+        { name: 'Paris', value: 'PRS' }
+    ];
+
+
 
 
     const StyledSection = styled.header<ISectionProps>`
@@ -31,10 +40,11 @@ export default function HomeSearch() {
     font-weight: 600;
   `;
     const searchInputRef = useRef<HTMLInputElement>(null);
-    const [selectSearchOps, setSelectSearchOps] = useState("product");
+    // const [selectSearchOps, setSelectSearchOps] = useState("product");
     const [selectProvinceOp, setSelectProvinceOp] = useState<number>(0);
     const [selectDistrictOp, setSelectDistrictOp] = useState<number>(0);
     const [selectWardOp, setSelectWardOp] = useState<number>(0);
+    const [selectCategoriesOps, setSelectCategoriesOps] = useState<string[]>([]);
     const [listProvincesOps, setListProvincesOps] = useState<ISelectBoxValueModel[]>([]);
     const [listDistrictOps, setListDistrictOps] = useState<ISelectBoxValueModel[]>([]);
     const [listWardOps, setListWardOps] = useState<ISelectBoxValueModel[]>([]);
@@ -58,7 +68,7 @@ export default function HomeSearch() {
     };
 
     const handleClearSearch = () => {
-        setSelectSearchOps("product");
+        //  setSelectSearchOps("product");
         if (searchInputRef.current) {
             searchInputRef.current.value = '';
         }
@@ -113,7 +123,7 @@ export default function HomeSearch() {
                         style={{ fontWeight: "800" }}
                         className=" text-white sm:text-5xl md:text-7xl"
                     >
-                        {selectSearchOps === "product" ? ("Find Product") : (" Find Store")}
+                        Find Retail Store
                     </h1>
                     <p className="my-4 sm:text-xl md:text-3xl text-white">
                         Discover the perfect property that suits your needs.
@@ -126,14 +136,14 @@ export default function HomeSearch() {
                                 <input
                                     className={`p-inputtext p-component w-full `}
                                     type="text"
-                                    placeholder={selectSearchOps === "product" ? "Find Product" : "Find Store"}
+                                    placeholder={"Find Retail Store"}
                                     ref={searchInputRef}
 
                                     style={{ transition: 'width 0.3s ease-in-out' }}
                                 />
                             </div>
                             <div className="flex jus md:col-4 col-12 md:gap-3 gap-2  ">
-                                <div className="field-radiobutton m-0 ">
+                                {/* <div className="field-radiobutton m-0 ">
                                     <RadioButton
                                         inputId="option1"
                                         name="option"
@@ -152,7 +162,9 @@ export default function HomeSearch() {
                                         onChange={(e) => setSelectSearchOps(e.value)}
                                     />
                                     <label className="text-white font-bold" htmlFor="option2">Search Store</label>
-                                </div>
+                                </div> */}
+                                <MultiSelect value={selectCategoriesOps} onChange={(e) => setSelectCategoriesOps(e.value)} options={sampleCategories} optionLabel="name"
+                                    filter placeholder="Select Categories" maxSelectedLabels={3} className="w-full" />
                             </div>
                         </div>
                         <div className="mx-auto w-full flex flex-column md:flex-row justify-content-center">

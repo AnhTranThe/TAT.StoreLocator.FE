@@ -4,13 +4,13 @@ import { GET_USER_LOGIN_INFO } from "../type/actionType";
 export const getUserLoginInfo = (
   id: string,
   email: string,
-  firstname: string,
+  firstName: string,
   roles: string
 ) => {
   return (dispatch: AppDispatch) => {
     dispatch({
       type: GET_USER_LOGIN_INFO,
-      payload: { id, email, firstname, roles },
+      payload: { id, email, firstName, roles },
     });
   };
 };

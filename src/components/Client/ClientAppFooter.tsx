@@ -9,7 +9,6 @@ export default function ClientAppFooter() {
     const StyledFooter = styled.footer`
     display: flex;
     z-index: 5;
-    position: relative;
     width: 100%;
     justify-content: space-between;
     align-items: center;
@@ -18,6 +17,8 @@ export default function ClientAppFooter() {
     color: ${(props) => props.theme.textColor};
     font-weight: 600;
     padding: 1rem 0;
+    height:5rem
+    
   `;
     return <StyledFooter className="flex justify-content-center   align-items-center">
         <span className="mr-2 text-white">  Make by</span>

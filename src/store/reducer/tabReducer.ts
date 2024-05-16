@@ -1,7 +1,11 @@
-import { SET_ACTIVE_TAB } from "../type/actionType";
+import {
+  SET_ACTIVE_TAB,
+  SET_ACTIVE_TAB_MENU_PROFILE,
+} from "../type/actionType";
 
 const initialState = {
   activeTab: "home",
+  activeTabMenuProfileIndex: 1,
 };
 const tabReducer = (
   state = initialState,
@@ -13,6 +17,11 @@ const tabReducer = (
       return {
         ...state,
         activeTab: payload,
+      };
+    case SET_ACTIVE_TAB_MENU_PROFILE:
+      return {
+        ...state,
+        activeTabMenuProfileIndex: payload,
       };
     default:
       return state;

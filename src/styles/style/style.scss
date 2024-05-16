@@ -1,3 +1,8 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
 .circle-button {
   border-radius: 50%; /* Make the button circular */
   padding: 0; /* Remove padding to make the image fit perfectly */
@@ -80,6 +85,7 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   transition: box-shadow 0.3s ease;
   outline: 2px solid #579dff;
+  // background-color: #cce0ff !important;
   background-color: #09326c !important;
 }
 .client-layout-wrapper {
