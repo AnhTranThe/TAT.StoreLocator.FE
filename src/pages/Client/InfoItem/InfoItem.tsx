@@ -1,17 +1,23 @@
 import { Rating } from "primereact/rating";
 import { useState } from "react";
 import { useAppSelector } from "../../../hooks/ReduxHook";
+import { IStoreResponseModel } from "../../../models/storeModel";
+import { getDetailStoreInfo } from "../../../store/action/storeAction";
 import { IThemeReducer } from "../../../store/reducer/themeReducer";
+import { useAppDispatch } from "../../../store/store";
 
-export default function InfoItem({ onInfoItemClick }: { onInfoItemClick: (e: React.MouseEvent<HTMLDivElement>) => void }) {
+export default function InfoItem({ infoStoreItem, onInfoItemClick }: { infoStoreItem: IStoreResponseModel, onInfoItemClick: (e: React.MouseEvent<HTMLDivElement>) => void }) {
+    const dispatch = useAppDispatch();
     const { isDarkTheme }: { isDarkTheme: boolean } = useAppSelector(
         (state: IThemeReducer) => state.themeReducer
     );
+
     const [isFav, setIsFav] = useState(false);
 
     return (
-        <div onClick={(e: React.MouseEvent<HTMLDivElement>) => {
+        <div key={infoStoreItem.id} onClick={(e: React.MouseEvent<HTMLDivElement>) => {
             onInfoItemClick(e);
+            dispatch(getDetailStoreInfo(infoStoreItem))
         }}
             className={`p-1 surface-card mb-4  cursor-pointer border-round-2xl ${isDarkTheme
                 ? "hover-item-dark-effect"
@@ -31,7 +37,7 @@ export default function InfoItem({ onInfoItemClick }: { onInfoItemClick: (e: Rea
                 </div> */}
                 <div className=" col-12 pl-4 py-3   ">
                     <div className="flex justify-content-between relative">
-                        <h5>Dia diem</h5>
+                        <h5>{infoStoreItem.name}</h5>
                         {!isFav ? (
                             <a onClick={(e) => {
                                 e.stopPropagation();
@@ -45,11 +51,13 @@ export default function InfoItem({ onInfoItemClick }: { onInfoItemClick: (e: Rea
                             }} className="absolute pi pi-heart-fill top-0 right-0 text-2xl text-red-300" title="Detail" />
                         )}
                     </div>
-                    <p>Address</p>
-                    <p>How far</p>
+                    {infoStoreItem.address && (
+                        <p>{infoStoreItem.address.roadName}, Ward {infoStoreItem.address.ward}, District {infoStoreItem.address.district}, {infoStoreItem.address.province}</p>
+                    )}
+
                     <a className=" flex pb-4 gap-2 ">
-                        <Rating value={5} readOnly cancel={false} />
-                        (Count)
+                        <Rating value={infoStoreItem.averageRating} readOnly cancel={false} />
+                        ({infoStoreItem.averageRating})
 
                     </a>
                     <div className="flex gap-2 ">

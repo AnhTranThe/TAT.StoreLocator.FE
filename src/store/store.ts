@@ -7,6 +7,7 @@ import { thunk } from "redux-thunk";
 import themeReducer from "./reducer/themeReducer";
 import userReducer from "./reducer/userReducer";
 import tabReducer from "./reducer/tabReducer";
+import storeReducer from "./reducer/storeReducer";
 
 const customizedMiddleware = {
   serializableCheck: false,
@@ -21,6 +22,7 @@ const allReducer: Reducer = combineReducers({
   themeReducer: themeReducer,
   userReducer: userReducer,
   tabReducer: tabReducer,
+  storeReducer: storeReducer,
 });
 const persistedReducer = persistReducer(persistConfig, allReducer);
 

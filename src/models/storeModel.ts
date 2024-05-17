@@ -18,14 +18,17 @@ import { IAddressResponseModel } from "./addressModel";
 import { IBaseEntityModel } from "./baseEntityModel";
 import { IGalleryResponseModel } from "./galleryModel";
 import { IProductResponseModel } from "./productModel";
+import { IReviewResponseModel } from "./reviewModel";
 import { IWishlistResponseModel } from "./wishlistModel";
 
 export interface IStoreResponseModel extends IBaseEntityModel {
   name: string;
   email: string;
   phoneNumber?: string;
-  address?: IAddressResponseModel;
-  galleries?: IGalleryResponseModel[];
-  products?: IProductResponseModel[];
-  wislists?: IWishlistResponseModel[];
+  address: IAddressResponseModel;
+  reviews: IReviewResponseModel[];
+  galleries: IGalleryResponseModel[];
+  products: IProductResponseModel[];
+  wislists: IWishlistResponseModel[];
+  averageRating?: number;
 }
