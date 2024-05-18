@@ -2,27 +2,49 @@ import { Rating } from "primereact/rating";
 import { useState } from "react";
 import { useAppSelector } from "../../../hooks/ReduxHook";
 import { IStoreResponseModel } from "../../../models/storeModel";
+import { setActiveInfoDetailAction, setActiveInfoItemAction } from "../../../store/action/infoDetailAction";
 import { getDetailStoreInfo } from "../../../store/action/storeAction";
 import { IThemeReducer } from "../../../store/reducer/themeReducer";
 import { useAppDispatch } from "../../../store/store";
+import './InfoItem.css';
+import { IActiveInfoItem } from '../../../store/reducer/infoDetailReducer';
 
-export default function InfoItem({ infoStoreItem, onInfoItemClick }: { infoStoreItem: IStoreResponseModel, onInfoItemClick: (e: React.MouseEvent<HTMLDivElement>) => void }) {
+export default function InfoItem({ infoStoreItem }: { infoStoreItem: IStoreResponseModel }) {
+    //onInfoItemClick: (e: React.MouseEvent<HTMLDivElement>) => void }
     const dispatch = useAppDispatch();
     const { isDarkTheme }: { isDarkTheme: boolean } = useAppSelector(
         (state: IThemeReducer) => state.themeReducer
     );
-
+    const { activeInfoItem }: { activeInfoItem: IActiveInfoItem } = useAppSelector(
+        (state) => state.infoDetailReducer
+    );
     const [isFav, setIsFav] = useState(false);
 
     return (
-        <div key={infoStoreItem.id} onClick={(e: React.MouseEvent<HTMLDivElement>) => {
-            onInfoItemClick(e);
+        <div key={infoStoreItem.id} onClick={() => {
+            dispatch(setActiveInfoItemAction(infoStoreItem.id, true))
+            dispatch(setActiveInfoDetailAction(true))
             dispatch(getDetailStoreInfo(infoStoreItem))
         }}
             className={`p-1 surface-card mb-4  cursor-pointer border-round-2xl ${isDarkTheme
                 ? "hover-item-dark-effect"
                 : "hover-item-light-effect"
-                } `}
+                }
+                ${activeInfoItem.itemId === infoStoreItem.id &&
+                    activeInfoItem.isActive === true &&
+                    isDarkTheme === true
+                    ? "active-item-dark-effect"
+                    : ""
+                }
+                  ${activeInfoItem.itemId === infoStoreItem.id &&
+                    activeInfoItem.isActive === true &&
+                    isDarkTheme === false
+                    ? "active-item-light-effect"
+                    : ""
+                }
+                
+                 `}
+        // ${isActive ? "active-item-light-effect" : ""}
         >
             <div className="flex flex-column md:flex-row ">
                 {/* <div

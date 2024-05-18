@@ -26,9 +26,9 @@ export interface IStoreResponseModel extends IBaseEntityModel {
   email: string;
   phoneNumber?: string;
   address: IAddressResponseModel;
-  reviews: IReviewResponseModel[];
-  galleries: IGalleryResponseModel[];
-  products: IProductResponseModel[];
-  wislists: IWishlistResponseModel[];
+  reviews?: IReviewResponseModel[];
+  galleries?: IGalleryResponseModel[];
+  products?: IProductResponseModel[];
+  wishlists?: IWishlistResponseModel[];
   averageRating?: number;
 }

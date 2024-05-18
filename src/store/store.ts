@@ -8,6 +8,7 @@ import themeReducer from "./reducer/themeReducer";
 import userReducer from "./reducer/userReducer";
 import tabReducer from "./reducer/tabReducer";
 import storeReducer from "./reducer/storeReducer";
+import infoDetailReducer from "./reducer/infoDetailReducer";
 
 const customizedMiddleware = {
   serializableCheck: false,
@@ -23,6 +24,7 @@ const allReducer: Reducer = combineReducers({
   userReducer: userReducer,
   tabReducer: tabReducer,
   storeReducer: storeReducer,
+  infoDetailReducer: infoDetailReducer,
 });
 const persistedReducer = persistReducer(persistConfig, allReducer);
 

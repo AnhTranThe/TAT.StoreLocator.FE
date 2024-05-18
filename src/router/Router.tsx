@@ -1,5 +1,9 @@
 import { useRoutes } from "react-router-dom";
 import HomeContainer from "../pages/Client/HomeContainer/HomeContainer";
+import ProfileManage from "../pages/Client/ProfileManage/ProfileManage";
+import ReviewBox from "../pages/Client/ReviewBox/ReviewBox";
+import SearchBox from "../pages/Client/SearchBox/SearchBox";
+import WishlistBox from "../pages/Client/WishlistBox/WishlistBox";
 import ClientLayout from "../pages/ClientLayout";
 import DashboardLayout from "../pages/DashboardLayout";
 import Dashboard from "../viewsTemplate";
@@ -7,9 +11,7 @@ import NotFoundPage from "../viewsTemplate/error/notFound";
 import AdminPrivateRoute from "./routes/AdminPrivateRoute";
 import AuthRoutes from "./routes/AuthRoutes";
 import ErrorRoutes from "./routes/ErrorRoutes";
-import ProfileManage from "../pages/Client/ProfileManage/ProfileManage";
-import WishlistManage from "../pages/Client/WishlistManage/WishlistManage";
-import ReviewManage from "../pages/Client/ReviewManage/ReviewManage";
+import ManagementBox from "../pages/Client/ManagerBox/ManagerBox";
 const Router = () => {
   // eslint-disable-next-line no-constant-condition
   const routes = useRoutes([
@@ -39,19 +41,32 @@ const Router = () => {
         {
           path: "/",
           element: <HomeContainer />,
+          children: [
+
+            {
+              path: "/",
+              element: <SearchBox />
+            },
+            {
+              path: "/wishlists/:userId",
+              element: <WishlistBox />
+            },
+            {
+              path: "/reviews/:userId",
+              element: <ReviewBox />
+            },
+          ]
         },
         {
-          path: "/managements/profile",
-          element: <ProfileManage />,
+          path: "/management/:userId",
+          element: <ManagementBox />,
+          children: [
+            {
+              path: "/management/:userId/profile",
+              element: <ProfileManage />
+            }
+          ]
         },
-        {
-          path: "/managements/wishlists",
-          element: <WishlistManage />,
-        },
-        {
-          path: "/managements/reviews",
-          element: <ReviewManage />,
-        }
       ],
     },
     {
@@ -62,6 +77,4 @@ const Router = () => {
 
   return routes;
 };
-
-
 export default Router;

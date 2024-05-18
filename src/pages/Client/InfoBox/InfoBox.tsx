@@ -5,7 +5,7 @@ import { updateStoresWithAverageRating } from "../../../Services/storeServiceApi
 import InfoItem from "../InfoItem/InfoItem";
 import './InfoBox.css';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function InfoBox({ onInfoItemClick }: { onInfoItemClick: (e: React.MouseEvent<HTMLDivElement>) => void }) {
+export default function InfoBox() {
     const [listStores, setListStores] = useState<IStoreResponseModel[]>([]);
     useEffect(() => {
         const updatedStores = updateStoresWithAverageRating(sampleListStores);
@@ -20,7 +20,7 @@ export default function InfoBox({ onInfoItemClick }: { onInfoItemClick: (e: Reac
                 <div className="flex flex-column overflow-y-auto custom-scrollbar p-2 " style={{ maxHeight: 'calc(100% - 3rem)' }}>
                     {
                         listStores.map(store => (
-                            <InfoItem key={store.id} infoStoreItem={store} onInfoItemClick={onInfoItemClick} />
+                            <InfoItem key={store.id} infoStoreItem={store} />
                         ))
                     }
                 </div>

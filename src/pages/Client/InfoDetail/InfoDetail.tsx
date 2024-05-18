@@ -5,14 +5,17 @@ import { useAppSelector } from "../../../hooks/ReduxHook";
 import { IGalleryResponseModel } from "../../../models/galleryModel";
 import { IStoreResponseModel } from "../../../models/storeModel";
 import "./InfoDetail.css";
-export default function InfoDetail({ hide }: { hide: () => void }) {
+import { useAppDispatch } from "../../../store/store";
+import { setActiveInfoDetailAction, setActiveInfoItemAction } from "../../../store/action/infoDetailAction";
+export default function InfoDetail() {
+    //{ hide }: { hide: () => void }
     const [images, setImages] = useState<IGalleryResponseModel[]>([]);
     const { detailStoreItemInfo }: { detailStoreItemInfo: IStoreResponseModel } = useAppSelector(
         (state) => state.storeReducer
     )
+    const dispatch = useAppDispatch()
     useEffect(() => {
-        setImages(detailStoreItemInfo.galleries)
-            ;
+        detailStoreItemInfo.galleries && setImages(detailStoreItemInfo.galleries);
     }, []);
 
     const itemTemplate = (item: IGalleryResponseModel) => {
@@ -21,7 +24,10 @@ export default function InfoDetail({ hide }: { hide: () => void }) {
     return (
         <Card className="relative border-round-2xl h-full" >
 
-            <a className="absolute top-0 right-0 m-2 pi pi-times cursor-pointer text-2xl " onClick={() => hide()} />
+            <a className="absolute top-0 right-0 m-2 pi pi-times cursor-pointer text-2xl " onClick={() => {
+                dispatch(setActiveInfoDetailAction(false))
+                dispatch(setActiveInfoItemAction("", false))
+            }} />
             <div className="pt-3">
                 <Galleria value={images} style={{ maxWidth: '100%' }} showThumbnails={false} showIndicators showIndicatorsOnItem item={itemTemplate} />
             </div>

@@ -211,7 +211,7 @@ export default function ClientAppTopbar() {
             <li>
               <a onClick={() => {
                 dispatch(setActiveTabMenuProfileAction(0))
-                nav("/managements/profile")
+                nav(`/profile/${userLoginInfo.id}`)
               }
 
               } className="p-ripple flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full">
@@ -222,9 +222,10 @@ export default function ClientAppTopbar() {
             </li>
             <li>
               <a onClick={() => {
-                dispatch(setActiveTabMenuProfileAction(1))
-                nav("/managements/wishlists")
+
+                nav(`/wishlists/${userLoginInfo.id}`)
               }
+
               }
                 className="p-ripple flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full">
                 <i className="pi pi-heart mr-3"></i>
@@ -234,8 +235,8 @@ export default function ClientAppTopbar() {
             </li>
             <li>
               <a onClick={() => {
-                dispatch(setActiveTabMenuProfileAction(2))
-                nav("/managements/reviews")
+
+                nav(`/reviews/${userLoginInfo.id}`)
               }
               } className="p-ripple flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full">
                 <i className="pi pi-comment mr-3"></i>
@@ -349,7 +350,7 @@ export default function ClientAppTopbar() {
                                         <li>
                                           <a onClick={() => {
                                             dispatch(setActiveTabMenuProfileAction(0))
-                                            nav("/managements/profile")
+                                            nav(`/profile/${userLoginInfo.id}`)
                                             setIsMobileMenuOpen(false)
                                           }
                                           }
@@ -361,8 +362,9 @@ export default function ClientAppTopbar() {
                                         </li>
                                         <li>
                                           <a onClick={() => {
-                                            dispatch(setActiveTabMenuProfileAction(1))
-                                            nav("/managements/wishlists")
+
+
+                                            nav(`/wishlists/${userLoginInfo.id}`)
                                             setIsMobileMenuOpen(false)
                                           }}
                                             className="p-ripple flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full">
@@ -373,8 +375,9 @@ export default function ClientAppTopbar() {
                                         </li>
                                         <li>
                                           <a onClick={() => {
-                                            dispatch(setActiveTabMenuProfileAction(2))
-                                            nav("/managements/reviews")
+
+
+                                            nav(`/reviews/${userLoginInfo.id}`)
                                             setIsMobileMenuOpen(false)
                                           }}
 
