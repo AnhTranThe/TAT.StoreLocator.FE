@@ -1,0 +1,15 @@
+.active-item-light-effect {
+  /* Add your hover styles here */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.3s ease;
+  outline: 2px solid #579dff;
+  background-color: #cce0ff !important;
+}
+
+.active-item-dark-effect {
+  /* Add your hover styles here */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.3s ease;
+  outline: 2px solid #579dff;
+  background-color: #09326c !important;
+}/*# sourceMappingURL=InfoItem.css.map */

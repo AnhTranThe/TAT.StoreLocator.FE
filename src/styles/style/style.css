@@ -1,0 +1,218 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+.circle-button {
+  border-radius: 50%; /* Make the button circular */
+  padding: 0; /* Remove padding to make the image fit perfectly */
+  width: 2.5rem; /* Set the desired width */
+  height: 2.5rem; /* Set the desired height */
+  overflow: hidden; /* Hide overflow content */
+}
+
+.icon {
+  width: 100%; /* Make the image fill the button */
+  height: auto; /* Maintain aspect ratio */
+}
+
+.menu {
+  background: #ffffff;
+  border-radius: 8px;
+  position: absolute;
+  top: 60px;
+  right: 0;
+  width: 300px;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-20px);
+  transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s;
+}
+
+.menu.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu li {
+  border-bottom: 1px solid #dddddd;
+}
+
+.menu li a {
+  text-decoration: none;
+  color: #333333;
+  padding: 15px 20px;
+  display: block;
+}
+
+.p-button-light {
+  color: black;
+  background: #ffffff;
+  border: 1px solid black;
+}
+
+.p-button-light:hover {
+  color: #05c;
+  background: #e9f2ff;
+  border: none;
+}
+
+.p-button-dark {
+  color: white;
+  background: #22272b;
+  border: none;
+}
+
+.p-button-dark:hover {
+  color: #05c;
+  background: #092957;
+  border: none;
+}
+
+.hover-item-light-effect:hover {
+  /* Add your hover styles here */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.3s ease;
+  outline: 2px solid #579dff;
+  background-color: #cce0ff !important;
+}
+
+.hover-item-dark-effect:hover {
+  /* Add your hover styles here */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.3s ease;
+  outline: 2px solid #579dff;
+  background-color: #09326c !important;
+}
+
+.client-layout-wrapper {
+  position: fixed;
+  left: 0;
+  height: 100vh;
+  width: 25rem;
+  margin-left: -40rem;
+}
+
+.client-layout-sidebar {
+  overflow-y: auto;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  left: 0;
+  height: inherit;
+  transition: all 0.3s ease-in;
+  background-color: var(--highlight-bg);
+  border-radius: 5px;
+  padding: 0.5rem 1.5rem;
+  box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.02), 0px 0px 2px rgba(0, 0, 0, 0.05), 0px 1px 4px rgba(0, 0, 0, 0.08);
+  width: 20rem;
+  opacity: 1;
+}
+.client-layout-sidebar .client-layout-sidebar-content {
+  min-width: 18rem;
+}
+
+.client-board-column {
+  background-color: var(--highlight-bg);
+}
+.client-board-column .overflow-y-scroll::-webkit-scrollbar {
+  display: none; /* Hide the scrollbar */
+}
+
+.client-board-column-item {
+  background-color: var(--surface-card);
+}
+
+.hidden__navbarClient {
+  transform: translateX(-100%);
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+.layout-main .right-content {
+  border-left: 2px solid #e5e7eb;
+  height: 100vh;
+  padding: 0 2rem;
+}
+.layout-main .right-content .button__navClient {
+  left: -15px;
+  top: 10px;
+  z-index: 4;
+  background-color: white;
+  border-radius: 50%;
+  color: black;
+  transition: all 0.2s linear;
+}
+.layout-main .right-content .button__navClient button {
+  margin: -10px;
+}
+.layout-main .right-content .button__navClient:hover {
+  background-color: #05c;
+}
+.layout-main .right-content .button__navClient:hover span {
+  color: white;
+}
+.layout-main .right-content .button__navClient .p-button:active, .layout-main .right-content .button__navClient .p-button:focus {
+  border: none;
+  background-color: none;
+  box-shadow: none;
+}
+
+.avatar-link .p-avatar-text:hover {
+  text-decoration: underline; /* Apply text decoration to the label when hovering */
+}
+
+@media all and (min-width: 650px) {
+  .main-menu-desktop-mode {
+    display: block;
+  }
+  .main-menu-mobile-mode {
+    display: none;
+  }
+}
+@media all and (max-width: 649px) {
+  .main-menu-desktop-mode {
+    display: none;
+  }
+  .main-menu-mobile-mode {
+    display: block;
+  }
+}
+.p-dialog-mask #pr_id_2 .form__project .card__container {
+  padding: 0.75rem !important;
+}
+.p-dialog-mask #pr_id_2 .form__project .card__container .card__item .p-checkbox {
+  width: 35px !important;
+  height: 35px !important;
+}
+.p-dialog-mask #pr_id_2 .form__project .card__container .card__item .p-checkbox .p-checkbox-box {
+  width: 35px !important;
+  height: 35px !important;
+}
+.p-dialog-mask #pr_id_2 .form__project .card__container .card__item:hover {
+  border: 2px solid #579dff;
+  background-color: #092957;
+  border-radius: 0.5rem;
+}
+
+.ProjectUser #features .button__delete {
+  top: 15px;
+  right: 15px;
+}
+
+@media screen and (min-width: 993px) {
+  .ProjectUser #features .button__delete {
+    top: 16px;
+    right: 45px;
+  }
+}/*# sourceMappingURL=style.css.map */
