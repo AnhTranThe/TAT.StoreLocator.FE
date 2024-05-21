@@ -1,4 +1,4 @@
-export interface IWishlistResponseModel {
+export interface IWishlistModel {
   total: number;
   userId: string;
   data: IStoreWishlistModel[];

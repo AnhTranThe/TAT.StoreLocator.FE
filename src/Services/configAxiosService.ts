@@ -1,6 +1,11 @@
 import axios from "axios";
+import { getUserLoginInfo } from "../store/action/userAction";
+import { useAppDispatch } from "../store/store";
 
-const baseUrl = "https://localhost:7128/api/";
+const baseUrl = import.meta.env.VITE_BASE_URL;
+if (!baseUrl) {
+  throw new Error("VITE_BASE_URL is not defined in the environment variables.");
+}
 // Tạo một instance Axios
 const axiosInstance = axios.create({
   baseURL: baseUrl,
@@ -11,10 +16,11 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     // Check hệ thống có token hay không và cập nhật Authorization header nếu có
-    const token = localStorage.getItem("Token");
-    if (token) {
-      const parseToken = JSON.parse(token);
-      config.headers.Authorization = "Bearer " + `${parseToken.refresh_token}`;
+    const tokenObject = localStorage.getItem("Token");
+
+    if (tokenObject) {
+      const parseToken = JSON.parse(tokenObject);
+      config.headers.Authorization = "Bearer " + `${parseToken.token}`;
     }
     return config;
   },
@@ -22,7 +28,12 @@ axiosInstance.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-
+const emptyUserLoginInfo = {
+  id: "",
+  email: "",
+  firstName: "",
+  roles: "",
+};
 // Intercept RESPONSE khi được trả về
 axiosInstance.interceptors.response.use(
   (response) => {
@@ -38,29 +49,43 @@ axiosInstance.interceptors.response.use(
       try {
         // Thực hiện gửi request để làm mới token
         // const currentToken = localStorage.getItem("refresh_token");
-        const refeshToken = localStorage.getItem("Token");
-        if (refeshToken) {
-          const parseRefeshToken = JSON.parse(refeshToken);
+        const tokenObject = localStorage.getItem("Token");
+
+        if (tokenObject) {
+          const parseTokenObject = JSON.parse(tokenObject);
           const response = await axios({
-            method: "get",
-            url: baseUrl + "/refresh-token",
-            headers: {
-              Authorization: "Bearer " + `${parseRefeshToken.refresh_token}`,
+            method: "post",
+            url: `${baseUrl}/Authentication/RefreshToken`,
+            data: {
+              accessToken: `${parseTokenObject.token}`,
+              refreshToken: `${parseTokenObject.refreshToken}`,
             },
           });
-
           // Cập nhật token mới và gửi lại request gốc với token mới
-          const newToken = response.data.refresh_token;
-          parseRefeshToken.refresh_token = newToken;
-          localStorage.setItem("Token", JSON.stringify(parseRefeshToken));
-          originalRequest.headers.Authorization = "Bearer " + `${newToken}`;
+          const newAccessToken = response.data.data.newAccessToken;
+          const newRefreshToken = response.data.data.newRefreshToken;
+          parseTokenObject.token = newAccessToken;
+          parseTokenObject.refreshToken = newRefreshToken;
+          localStorage.setItem("Token", JSON.stringify(parseTokenObject));
+          originalRequest.headers.Authorization =
+            "Bearer " + `${newAccessToken}`;
           return axios(originalRequest);
         }
       } catch (error) {
+        console.log(error);
+
         // Nếu không thể làm mới token, chuyển hướng đến trang đăng nhập hoặc xử lý lỗi khác
         // Ví dụ: window.location.href = '/login';
-        console.log(error);
-        window.location.href = "/api/login";
+        const dispatch = useAppDispatch();
+        dispatch(
+          getUserLoginInfo(
+            emptyUserLoginInfo.id,
+            emptyUserLoginInfo.email,
+            emptyUserLoginInfo.firstName,
+            emptyUserLoginInfo.roles
+          )
+        );
+        window.location.href = "/auth/login";
         localStorage.removeItem("Token");
         return Promise.reject(error);
       }

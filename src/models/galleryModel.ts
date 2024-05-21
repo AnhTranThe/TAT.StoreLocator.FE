@@ -1,6 +1,6 @@
 import { IBaseEntityModel } from "./baseEntityModel";
 
-export interface IGalleryResponseModel extends IBaseEntityModel {
+export interface IGalleryModel extends IBaseEntityModel {
   url: string;
   isThumbnail: boolean;
 }

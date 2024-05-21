@@ -1,6 +1,6 @@
 import { EGenderType } from "../enums";
 
-export interface IUserResponseModel {
+export interface IUserModel {
   Id: string;
   FullName: string;
   Email: string;

@@ -1,5 +1,5 @@
-import { IReviewResponseModel } from "../models/reviewModel";
-import { IStoreResponseModel } from "../models/storeModel";
+import { IReviewModel } from "../models/reviewModel";
+import { IStoreModel } from "../models/storeModel";
 
 export const calAverageRatingValueFunc = (arrRating: number[]) => {
   if (arrRating.length === 0) {
@@ -12,7 +12,8 @@ export const calAverageRatingValueFunc = (arrRating: number[]) => {
   const avgRating = sum / arrRating.length;
   return avgRating;
 };
-const calculateAverageRating = (reviews: IReviewResponseModel[]): number => {
+
+const calculateAverageRating = (reviews: IReviewModel[]): number => {
   if (reviews.length === 0) return 0;
   const totalRating = reviews.reduce(
     (sum, review) => sum + review.ratingValue,
@@ -21,10 +22,10 @@ const calculateAverageRating = (reviews: IReviewResponseModel[]): number => {
   return totalRating / reviews.length;
 };
 export const updateStoresWithAverageRating = (
-  stores: IStoreResponseModel[]
-): IStoreResponseModel[] => {
+  stores: IStoreModel[]
+): IStoreModel[] => {
   return stores.map((store) => ({
     ...store,
-    averageRating: calculateAverageRating(store.reviews),
+    averageRating: store.reviews && calculateAverageRating(store.reviews),
   }));
 };

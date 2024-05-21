@@ -1,5 +1,5 @@
 import { IBaseResponseModel } from "./commonModel";
-import { IUserResponseModel } from "./userModel";
+import { IUserModel } from "./userModel";
 
 export interface ILoginRequestModel {
   emailOrUserName: string;
@@ -19,7 +19,7 @@ export interface ISignUpRequestModel {
 }
 export interface ISignUpResponseModel {
   baseResponse: IBaseResponseModel;
-  userResponseModel: IUserResponseModel;
+  userResponseModel: IUserModel;
 }
 
 export interface IUserSaveInfoModel {

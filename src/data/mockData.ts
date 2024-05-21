@@ -1,8 +1,8 @@
 import { generateRandomImageMock } from "./../utils/Utilities";
-import { IStoreResponseModel } from "../models/storeModel";
+import { IStoreModel } from "../models/storeModel";
 import { EReviewStatusType } from "../enums";
 
-export const sampleListStores: IStoreResponseModel[] = [
+export const sampleListStores: IStoreModel[] = [
   {
     id: "store-1",
     name: "Sinh tố 72D ",
@@ -52,7 +52,7 @@ export const sampleListStores: IStoreResponseModel[] = [
       {
         id: "gallery-1-store-1",
         url: generateRandomImageMock(),
-        isThumbnail: false,
+        isThumbnail: true,
       },
       {
         id: "gallery-2-store-1",
@@ -73,14 +73,16 @@ export const sampleListStores: IStoreResponseModel[] = [
     products: [
       {
         id: "product-1-store-1",
-        name: "",
+        name: "product-1-store-1",
         rating: 4,
+        price: 30000000,
+        quantity: 10,
         isActive: true,
         galleries: [
           {
             id: "gallery-1-product-1-store-1",
             url: generateRandomImageMock(),
-            isThumbnail: false,
+            isThumbnail: true,
           },
           {
             id: "gallery-2-product-1-store-1",
@@ -89,8 +91,54 @@ export const sampleListStores: IStoreResponseModel[] = [
           },
         ],
       },
+      {
+        id: "product-2-store-1",
+        name: "product-2-store-1",
+        rating: 3,
+        isActive: true,
+        galleries: [
+          {
+            id: "gallery-1-product-2-store-1",
+            url: generateRandomImageMock(),
+            isThumbnail: true,
+          },
+          {
+            id: "gallery-2-product-2-store-1",
+            url: generateRandomImageMock(),
+            isThumbnail: false,
+          },
+          {
+            id: "gallery-3-product-2-store-1",
+            url: generateRandomImageMock(),
+            isThumbnail: false,
+          },
+        ],
+      },
+      {
+        id: "product-3-store-1",
+        name: "product-3-store-1",
+        rating: 3,
+        isActive: true,
+        galleries: [
+          {
+            id: "gallery-1-product-3-store-1",
+            url: generateRandomImageMock(),
+            isThumbnail: true,
+          },
+          {
+            id: "gallery-2-product-3-store-1",
+            url: generateRandomImageMock(),
+            isThumbnail: true,
+          },
+          {
+            id: "gallery-3-product-3-store-1",
+            url: generateRandomImageMock(),
+            isThumbnail: false,
+          },
+        ],
+      },
     ],
-    wislists: [],
+    wishlists: [],
   },
   {
     id: "store-2",
@@ -143,7 +191,7 @@ export const sampleListStores: IStoreResponseModel[] = [
       {
         id: "gallery-1-store-2",
         url: generateRandomImageMock(),
-        isThumbnail: false,
+        isThumbnail: true,
       },
       {
         id: "gallery-2-store-2",
@@ -181,7 +229,7 @@ export const sampleListStores: IStoreResponseModel[] = [
         ],
       },
     ],
-    wislists: [],
+    wishlists: [],
   },
   {
     id: "store-3",
@@ -255,7 +303,7 @@ export const sampleListStores: IStoreResponseModel[] = [
         ],
       },
     ],
-    wislists: [],
+    wishlists: [],
   },
   {
     id: "store-4",
@@ -315,6 +363,6 @@ export const sampleListStores: IStoreResponseModel[] = [
         ],
       },
     ],
-    wislists: [],
+    wishlists: [],
   },
 ];

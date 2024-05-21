@@ -70,3 +70,11 @@ export const validateSignIn = yup.object().shape({
     .required("(*) Pls!! Fill your email or user name"),
   password: yup.string().required("(*) Pls!! Fill your password"),
 });
+
+export const validateCategory = yup.object().shape({
+  name: yup
+    .string()
+    .min(1, "(*) min name is 1 character")
+    .max(50, "(*) max name is 50 character")
+    .required("(*) pls!! field value"),
+});

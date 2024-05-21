@@ -1,12 +1,15 @@
-import { IStoreResponseModel } from "../../models/storeModel";
+import { IStoreModel } from "../../models/storeModel";
 
-import { GET_DETAIL_STORE } from "../type/actionType";
+import {
+  GET_DETAIL_STORE,
+  GET_LIST_STORE_BY_SEARCH_KEY,
+} from "../type/actionType";
 
 interface IInitialState {
-  detailStoreItemInfo: IStoreResponseModel;
+  detailStoreItemInfo: IStoreModel;
+  listStoreItemBySearchKey: IStoreModel[];
 }
-
-const emptyDetailStoreItemInfo: IStoreResponseModel = {
+const emptyDetailStoreItemInfo: IStoreModel = {
   id: "",
   name: "",
   email: "",
@@ -24,12 +27,13 @@ const emptyDetailStoreItemInfo: IStoreResponseModel = {
   reviews: [],
   galleries: [],
   products: [],
-  wislists: [],
+  wishlists: [],
   averageRating: 0,
 };
 
 const initialState: IInitialState = {
   detailStoreItemInfo: emptyDetailStoreItemInfo,
+  listStoreItemBySearchKey: [],
 };
 const storeReducer = (
   state = initialState,
@@ -41,6 +45,12 @@ const storeReducer = (
       return {
         ...state,
         detailStoreItemInfo: payload,
+      };
+    }
+    case GET_LIST_STORE_BY_SEARCH_KEY: {
+      return {
+        ...state,
+        listStoreItemBySearchKey: payload,
       };
     }
     default:

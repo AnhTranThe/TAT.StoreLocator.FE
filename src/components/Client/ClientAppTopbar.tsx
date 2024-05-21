@@ -50,13 +50,10 @@ export default function ClientAppTopbar() {
     firstName: "",
     roles: ""
   }
-
-
-
   const dispatch = useAppDispatch();
   const { isDarkTheme }: { isDarkTheme: boolean } = useAppSelector(
     (state: IThemeReducer) => state.themeReducer
-  );
+  )
 
   const { activeTab }: { activeTab: string } = useAppSelector(
     (state) => state.tabReducer
@@ -93,7 +90,6 @@ export default function ClientAppTopbar() {
     dispatch(getUserLoginInfo(emptyUserLoginInfo.id, emptyUserLoginInfo.email, emptyUserLoginInfo.firstName, emptyUserLoginInfo.roles));
     nav("/auth/login");
   };
-
   const itemLeft: IMenuItem[] = [
     {
       template: () => {
@@ -166,7 +162,7 @@ export default function ClientAppTopbar() {
     {
       template: () => {
 
-        if (userLoginInfo.id && userLoginInfo.roles) {
+        if (userLoginInfo.id !== "" && userLoginInfo.roles !== "") {
 
           return (
             <Button onClick={(e) => { menuProfileRef.current?.toggle(e) }} className={`bg-black-alpha-40 hover:bg-black-alpha-90 border-round text-white`}

@@ -1,7 +1,7 @@
 import { Rating } from "primereact/rating";
 import { useState } from "react";
 import { useAppSelector } from "../../../hooks/ReduxHook";
-import { IStoreResponseModel } from "../../../models/storeModel";
+import { IStoreModel } from "../../../models/storeModel";
 import { setActiveInfoDetailAction, setActiveInfoItemAction } from "../../../store/action/infoDetailAction";
 import { getDetailStoreInfo } from "../../../store/action/storeAction";
 import { IThemeReducer } from "../../../store/reducer/themeReducer";
@@ -9,7 +9,7 @@ import { useAppDispatch } from "../../../store/store";
 import './InfoItem.css';
 import { IActiveInfoItem } from '../../../store/reducer/infoDetailReducer';
 
-export default function InfoItem({ infoStoreItem }: { infoStoreItem: IStoreResponseModel }) {
+export default function InfoItem({ infoStoreItem }: { infoStoreItem: IStoreModel }) {
     //onInfoItemClick: (e: React.MouseEvent<HTMLDivElement>) => void }
     const dispatch = useAppDispatch();
     const { isDarkTheme }: { isDarkTheme: boolean } = useAppSelector(

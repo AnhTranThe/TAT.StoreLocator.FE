@@ -1,4 +1,4 @@
-// export interface IUserResponseModel {
+// export interface IUserModel {
 //     Id: string;
 //     FullName: string;
 //     Email: string;
@@ -14,21 +14,21 @@
 //     Roles: string[] | null;
 //   }
 
-import { IAddressResponseModel } from "./addressModel";
+import { IAddressModel } from "./addressModel";
 import { IBaseEntityModel } from "./baseEntityModel";
-import { IGalleryResponseModel } from "./galleryModel";
-import { IProductResponseModel } from "./productModel";
-import { IReviewResponseModel } from "./reviewModel";
-import { IWishlistResponseModel } from "./wishlistModel";
+import { IGalleryModel } from "./galleryModel";
+import { IProductModel } from "./productModel";
+import { IReviewModel } from "./reviewModel";
+import { IWishlistModel } from "./wishlistModel";
 
-export interface IStoreResponseModel extends IBaseEntityModel {
+export interface IStoreModel extends IBaseEntityModel {
   name: string;
   email: string;
   phoneNumber?: string;
-  address: IAddressResponseModel;
-  reviews?: IReviewResponseModel[];
-  galleries?: IGalleryResponseModel[];
-  products?: IProductResponseModel[];
-  wishlists?: IWishlistResponseModel[];
+  address: IAddressModel;
+  reviews?: IReviewModel[];
+  galleries?: IGalleryModel[];
+  products?: IProductModel[];
+  wishlists?: IWishlistModel[];
   averageRating?: number;
 }

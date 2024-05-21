@@ -78,3 +78,10 @@ export const decodeJwtToken = (token: string) => {
   const decoded = jwtDecode(token);
   return decoded;
 };
+export const formatCurrencyPriceVnd = (price: number) => {
+  const priceFormat = price.toLocaleString("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  });
+  return priceFormat;
+};

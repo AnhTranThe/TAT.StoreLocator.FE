@@ -1,10 +1,24 @@
 import { IBaseEntityModel } from "./baseEntityModel";
-import { IGalleryResponseModel } from "./galleryModel";
+import { IPaginationResponseModel } from "./paginationModel";
+import { IProductModel } from "./productModel";
 
-export interface ICategoryResponseModel extends IBaseEntityModel {
+export interface ICategoryRequestModel {
+  name: string;
+  description?: string;
+  isActive: boolean;
+  parentCategoryId?: string;
+}
+
+export interface ICategoryModel extends IBaseEntityModel {
   name: string;
   description?: string;
   slug?: string;
   isActive: boolean;
-  gallery?: IGalleryResponseModel;
+  parentCategoryName?: string;
+  parentCategoryId?: string;
+  productResponseModels?: IProductModel[];
+}
+export interface ICategoryPaginationResponseModel
+  extends IPaginationResponseModel {
+  data: ICategoryModel[];
 }

@@ -1,11 +1,11 @@
 import { IBaseEntityModel } from "./baseEntityModel";
-import { ICategoryResponseModel } from "./categoryModel";
-import { IGalleryResponseModel } from "./galleryModel";
-import { IReviewResponseModel } from "./reviewModel";
-import { IStoreResponseModel } from "./storeModel";
-import { IWishlistResponseModel } from "./wishlistModel";
+import { ICategoryModel } from "./categoryModel";
+import { IGalleryModel } from "./galleryModel";
+import { IReviewModel } from "./reviewModel";
+import { IStoreModel } from "./storeModel";
+import { IWishlistModel } from "./wishlistModel";
 
-export interface IProductResponseModel extends IBaseEntityModel {
+export interface IProductModel extends IBaseEntityModel {
   name: string | null;
   description?: string;
   content?: string;
@@ -20,9 +20,9 @@ export interface IProductResponseModel extends IBaseEntityModel {
   sku?: string;
   isActive: boolean;
   productViewCount?: number;
-  reviews?: IReviewResponseModel[];
-  category?: ICategoryResponseModel;
-  galleries?: IGalleryResponseModel[];
-  store?: IStoreResponseModel;
-  wishlists?: IWishlistResponseModel[];
+  reviews?: IReviewModel[];
+  category?: ICategoryModel;
+  galleries?: IGalleryModel[];
+  store?: IStoreModel;
+  wishlists?: IWishlistModel[];
 }

@@ -11,7 +11,6 @@ export const getListProvincesService = async () => {
     const res = await apiService.get("/provinces", {
       params: { page: 0, size: 100 },
     });
-    console.log("res.data", res.data);
     return res.data;
   } catch (error) {
     console.log(error);

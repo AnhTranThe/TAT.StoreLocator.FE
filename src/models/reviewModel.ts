@@ -1,7 +1,7 @@
 import { EReviewStatusType } from "../enums";
 import { IBaseEntityModel } from "./baseEntityModel";
 
-export interface IReviewResponseModel extends IBaseEntityModel {
+export interface IReviewModel extends IBaseEntityModel {
   content: string;
   ratingValue: number;
   status: EReviewStatusType;
