@@ -77,4 +77,9 @@ export const validateCategory = yup.object().shape({
     .min(1, "(*) min name is 1 character")
     .max(50, "(*) max name is 50 character")
     .required("(*) pls!! field value"),
+  description: yup
+    .string()
+    .min(1, "(*) min name is 1 character")
+    .max(50, "(*) max name is 50 character")
+    .required("(*) pls!! field value"),
 });

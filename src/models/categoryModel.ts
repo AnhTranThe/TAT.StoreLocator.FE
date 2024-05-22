@@ -5,6 +5,7 @@ import { IProductModel } from "./productModel";
 export interface ICategoryRequestModel {
   name: string;
   description?: string;
+  slug?: string;
   isActive: boolean;
   parentCategoryId?: string;
 }

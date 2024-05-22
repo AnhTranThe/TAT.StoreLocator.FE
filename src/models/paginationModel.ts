@@ -5,3 +5,8 @@ export interface IPaginationResponseModel {
   totalPageCount: number;
   searchTerm: string;
 }
+export interface IPaginationRequestModel {
+  pageSize?: number;
+  pageIndex?: number;
+  searchString?: string;
+}

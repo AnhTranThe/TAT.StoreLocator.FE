@@ -23,7 +23,7 @@ export interface IModel {
 
 export interface ISelectBoxValueModel {
   name: string;
-  value: string;
+  value: string | boolean;
 }
 export interface IBaseResponseModel {
   message: string;
