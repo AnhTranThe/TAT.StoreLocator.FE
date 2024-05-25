@@ -327,7 +327,7 @@ export default function CategoryAdmin() {
     }, [fetchCategories, pageIndex, rowsPage, fetchParentCategories]);
 
     return (
-        <div className="grid crud-demo">
+        <div className="grid">
             <div className="col-12">
                 <div className="card">
                     <Toolbar className="mb-4" right={rightContents} left={leftContents}></Toolbar>
@@ -335,7 +335,7 @@ export default function CategoryAdmin() {
                         <div style={{ height: 'calc(100vh - 22rem)' }} className="flex justify-content-center align-items-center ">
                             <ProgressSpinner />
                         </div>) : (
-                        <DataTable value={listCategories} size="small" >
+                        <DataTable scrollable scrollHeight="calc(100vh - 25rem)" value={listCategories} size="normal" style={{ minWidth: '50rem' }}>
                             <Column field="name" header="Category Name" body={(data: ICategoryModel) => (
                                 <React.Fragment>
                                     <span className="p-column-title">Category Name</span>
@@ -464,6 +464,7 @@ export default function CategoryAdmin() {
                             value={values.parentCategoryId} onChange={handleChangeDropdownCategory}
                             name="parentCategoryId"
                             optionLabel="name"
+                            optionValue="value"
                             options={listParentCategoriesOps}
                             placeholder="Select parent category"
                             filter valueTemplate={selectedFilterDropDownTemplate} itemTemplate={filterDropDownOptionTemplate} />

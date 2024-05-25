@@ -83,3 +83,42 @@ export const validateCategory = yup.object().shape({
     .max(50, "(*) max name is 50 character")
     .required("(*) pls!! field value"),
 });
+
+export const validateStore = yup.object().shape({
+  name: yup
+    .string()
+    .min(1, "Name must be at least 1 character long")
+    .max(50, "Name must be at most 50 characters long")
+    .required("Name is required"),
+
+  email: yup
+    .string()
+    .email("Invalid email address")
+    .min(1, "Email must be at least 1 character long")
+    .max(50, "Email must be at most 50 characters long")
+    .required("Email is required"),
+
+  phoneNumber: yup
+    .string()
+    .min(1, "Phone number must be at least 1 character long")
+    .max(50, "Phone number must be at most 50 characters long")
+    .required("Phone number is required"),
+
+  roadName: yup.string().required("Road name is required"),
+
+  postalCode: yup
+    .string()
+    .max(20, "Postal code must be at most 20 characters long"),
+
+  latitude: yup
+    .number()
+    .typeError("Latitude must be a number")
+    .min(-90, "Latitude must be between -90 and 90")
+    .max(90, "Latitude must be between -90 and 90"),
+
+  longitude: yup
+    .number()
+    .typeError("Longitude must be a number")
+    .min(-180, "Longitude must be between -180 and 180")
+    .max(180, "Longitude must be between -180 and 180"),
+});

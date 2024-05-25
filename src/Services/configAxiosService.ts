@@ -2,6 +2,8 @@ import axios from "axios";
 import { getUserLoginInfo } from "../store/action/userAction";
 import { useAppDispatch } from "../store/store";
 
+export const CONTENT_TYPE_JSON = "application/json";
+export const CONTENT_TYPE_FORM_DATA = "multipart/form-data";
 const baseUrl = import.meta.env.VITE_BASE_URL;
 if (!baseUrl) {
   throw new Error("VITE_BASE_URL is not defined in the environment variables.");

@@ -15,27 +15,16 @@ const serviceDashboardNavigations: IModel[] = [
         to: "/admin/product",
       },
       {
+        label: "Gallery",
+        icon: "pi pi-fw pi-images",
+        to: "/admin/gallery",
+      },
+      {
         label: "Category",
         icon: "pi pi-fw pi-th-large",
         to: "/admin/category",
       },
-      {
-        label: "Wishlist",
-        icon: "pi pi-fw pi-bookmark",
-        to: "/admin/wishlist",
-      },
-      {
-        label: "Review",
-        icon: "pi pi-fw pi-star",
-        to: "/admin/review",
-      },
-      {
-        label: "User",
-        icon: "pi pi-fw pi-user",
-        to: "/admin/user",
-      },
     ],
   },
 ];
-
 export default serviceDashboardNavigations;

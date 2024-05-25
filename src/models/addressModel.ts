@@ -14,3 +14,13 @@ export interface IGeolocation {
   latitude: number;
   longitude: number;
 }
+
+export interface IAddressStoreRequestModel {
+  roadName: string | "";
+  province: string | "";
+  district: string | "";
+  ward: string | "";
+  postalCode: string | "";
+  latitude: number | 0;
+  longitude: number | 0;
+}

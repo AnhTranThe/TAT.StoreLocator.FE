@@ -171,6 +171,8 @@ export default function HomeSearch() {
                             <div className=" md:pr-2 mb-4 md:mb-0  md:col-4 col-12  ">
                                 <Dropdown className="w-full"
                                     value={selectProvinceOp} onChange={(e) => {
+
+
                                         setSelectProvinceOp(e.value);
                                         handleGetListDistricts(e.value);
                                     }}

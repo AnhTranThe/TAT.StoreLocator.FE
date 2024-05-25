@@ -24,11 +24,8 @@ const emptyDetailStoreItemInfo: IStoreModel = {
     latitude: 0,
     longitude: 0,
   },
-  reviews: [],
-  galleries: [],
-  products: [],
-  wishlists: [],
   averageRating: 0,
+  mapGalleryStores: [],
 };
 
 const initialState: IInitialState = {

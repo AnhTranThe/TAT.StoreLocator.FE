@@ -16,7 +16,7 @@ export const getListCategoryService = async (
     }
     // Make the API request with query parameters
     const res = await axiosInstance.get(
-      `/admin/category/getListCategory?${params.toString()}`
+      `/category/getListCategory?${params.toString()}`
     );
     return res.data;
   } catch (error) {
@@ -36,7 +36,7 @@ export const getListParentCategoryService = async (
       params.append("searchString", searchString);
     }
     const res = await axiosInstance.get(
-      `/admin/category/GetListParentCategory?${params.toString()}`
+      `/category/GetListParentCategory?${params.toString()}`
     );
     return res.data;
   } catch (error) {
@@ -56,7 +56,7 @@ export const getListSubCategoryService = async (
       params.append("searchString", searchString);
     }
     const res = await axiosInstance.get(
-      `/admin/category/GetListsubCategory?${params.toString()}`
+      `/category/GetListsubCategory?${params.toString()}`
     );
     return res.data;
   } catch (error) {

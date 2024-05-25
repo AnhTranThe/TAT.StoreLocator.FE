@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import { jwtDecode } from "jwt-decode";
+import { IMapGalleryStoreModel } from "../models/galleryModel";
 
 export const formatDateTime = (dateTimeOffet: string) => {
   const currentDate = dayjs(dateTimeOffet); // Get current date with dayjs
@@ -84,4 +85,19 @@ export const formatCurrencyPriceVnd = (price: number) => {
     currency: "VND",
   });
   return priceFormat;
+};
+
+export const convertToFileArray = async (
+  galleryStores: IMapGalleryStoreModel[]
+): Promise<File[]> => {
+  const filePromises = galleryStores.map(async (gallery) => {
+    const response = await fetch(gallery.url);
+    const contentType = response.headers.get("content-type");
+    const blob = await response.blob();
+    return new File([blob], gallery.fileName, {
+      type: contentType ? contentType : "image/jpeg",
+    });
+  });
+
+  return Promise.all(filePromises);
 };

@@ -1,23 +1,24 @@
 import { useRoutes } from "react-router-dom";
 import HomeContainer from "../pages/Client/HomeContainer/HomeContainer";
+import ManagementBox from "../pages/Client/ManagerBox/ManagerBox";
 import ProfileManage from "../pages/Client/ProfileManage/ProfileManage";
 import ReviewBox from "../pages/Client/ReviewBox/ReviewBox";
 import SearchBox from "../pages/Client/SearchBox/SearchBox";
 import WishlistBox from "../pages/Client/WishlistBox/WishlistBox";
 import ClientLayout from "../pages/ClientLayout";
+import CategoryAdmin from '../pages/Dashboard/Category/CategoryAdmin';
+import GalleryAdmin from "../pages/Dashboard/Gallery/GalleryAdmin";
+import ProductAdmin from "../pages/Dashboard/Product/ProductAdmin";
+import ReviewAdmin from "../pages/Dashboard/Review/ReviewAdmin";
+import StoreAdmin from "../pages/Dashboard/Store/StoreAdmin";
+import UserAdmin from "../pages/Dashboard/User/UserAdmin";
+import WishlistAdmin from "../pages/Dashboard/Wishlist/WishlistAdmin";
 import DashboardLayout from "../pages/DashboardLayout";
 import Dashboard from "../viewsTemplate";
 import NotFoundPage from "../viewsTemplate/error/notFound";
 import AdminPrivateRoute from "./routes/AdminPrivateRoute";
 import AuthRoutes from "./routes/AuthRoutes";
 import ErrorRoutes from "./routes/ErrorRoutes";
-import ManagementBox from "../pages/Client/ManagerBox/ManagerBox";
-import StoreAdmin from "../pages/Dashboard/Store/StoreAdmin";
-import ProductAdmin from "../pages/Dashboard/Product/ProductAdmin";
-import CategoryAdmin from '../pages/Dashboard/Category/CategoryAdmin';
-import WishlistAdmin from "../pages/Dashboard/Wishlist/WishlistAdmin";
-import ReviewAdmin from "../pages/Dashboard/Review/ReviewAdmin";
-import UserAdmin from "../pages/Dashboard/User/UserAdmin";
 const Router = () => {
   // eslint-disable-next-line no-constant-condition
   const routes = useRoutes([
@@ -58,6 +59,10 @@ const Router = () => {
         {
           path: "/admin/user",
           element: <UserAdmin />,
+        },
+        {
+          path: "/admin/gallery",
+          element: <GalleryAdmin />,
         },
 
       ],
