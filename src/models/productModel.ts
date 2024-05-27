@@ -26,3 +26,8 @@ export interface IProductModel extends IBaseEntityModel {
   store?: IStoreModel;
   wishlists?: IWishlistModel[];
 }
+
+export interface IProductSimpleModel {
+  id: string;
+  name: string;
+}

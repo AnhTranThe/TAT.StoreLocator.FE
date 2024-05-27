@@ -1,13 +1,13 @@
-import { IStoreModel } from "../../models/storeModel";
-
 import {
-  GET_DETAIL_STORE,
-  GET_LIST_STORE_BY_SEARCH_KEY,
-} from "../type/actionType";
+  IStoreModel,
+  IStorePaginationResponseModel,
+} from "../../models/storeModel";
+
+import { GET_DETAIL_STORE, GET_LIST_STORES_NEAR } from "../type/actionType";
 
 interface IInitialState {
   detailStoreItemInfo: IStoreModel;
-  listStoreItemBySearchKey: IStoreModel[];
+  listStoresNear: IStorePaginationResponseModel;
 }
 const emptyDetailStoreItemInfo: IStoreModel = {
   id: "",
@@ -24,13 +24,22 @@ const emptyDetailStoreItemInfo: IStoreModel = {
     latitude: 0,
     longitude: 0,
   },
-  averageRating: 0,
+  isActive: false,
   mapGalleryStores: [],
+  reviews: [],
 };
 
+const emptyListStoresNear: IStorePaginationResponseModel = {
+  pageSize: 10,
+  pageIndex: 1,
+  totalCount: 0,
+  totalPageCount: 0,
+  searchTerm: "",
+  data: [],
+};
 const initialState: IInitialState = {
   detailStoreItemInfo: emptyDetailStoreItemInfo,
-  listStoreItemBySearchKey: [],
+  listStoresNear: emptyListStoresNear,
 };
 const storeReducer = (
   state = initialState,
@@ -44,10 +53,10 @@ const storeReducer = (
         detailStoreItemInfo: payload,
       };
     }
-    case GET_LIST_STORE_BY_SEARCH_KEY: {
+    case GET_LIST_STORES_NEAR: {
       return {
         ...state,
-        listStoreItemBySearchKey: payload,
+        listStoresNear: payload,
       };
     }
     default:

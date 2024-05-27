@@ -2,13 +2,45 @@
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
 import { MultiSelect } from "primereact/multiselect";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { getListDistrictsService, getListProvincesService, getListWardsService } from "../../../Services/addressServiceApi";
+import { getListParentCategoryService } from "../../../Services/categoryServiceApi";
+import { getReverseGeocodingService } from "../../../Services/locationServiceApi";
+import { getListNearStoreService } from "../../../Services/storeServiceApi";
 import { useAppSelector } from "../../../hooks/ReduxHook";
+import { IGeolocation } from "../../../models/addressModel";
+import { ICategoryModel } from "../../../models/categoryModel";
 import { ISelectBoxValueModel } from "../../../models/commonModel";
+import { IReverseGeolocationResponseModel } from "../../../models/locationModel";
 import { IOApiDistrictModel, IOApiProvinceModel, IOApiWardModel } from '../../../models/oApiModel';
+import { IPaginationRequestModel } from "../../../models/paginationModel";
+import { IStoreGetNearRequestModel, IStorePaginationResponseModel } from "../../../models/storeModel";
+import { getListNearStoreAction } from "../../../store/action/storeAction";
 import { IThemeReducer } from "../../../store/reducer/themeReducer";
+import { useAppDispatch } from "../../../store/store";
+import { IToastValueContext, ToastContext } from "../../context/toastContext";
+
+const emptyStoreGetNearRequest: IStoreGetNearRequestModel = {
+    district: "",
+    ward: "",
+    province: "",
+    keyWord: "",
+    categories: ""
+}
+const pagingAllListRequest: IPaginationRequestModel = {
+    pageSize: 10000,
+    pageIndex: 1,
+}
+
+const emptyListStoresNear: IStorePaginationResponseModel = {
+    pageSize: 10,
+    pageIndex: 1,
+    totalCount: 0,
+    totalPageCount: 0,
+    searchTerm: "",
+    data: [],
+};
 
 export default function HomeSearch() {
     interface ISectionProps {
@@ -17,16 +49,6 @@ export default function HomeSearch() {
     const { isDarkTheme }: { isDarkTheme: boolean } = useAppSelector(
         (state: IThemeReducer) => state.themeReducer
     );
-    const sampleCategories: ISelectBoxValueModel[] = [
-        { name: 'New York', value: 'NY' },
-        { name: 'Rome', value: 'RM' },
-        { name: 'London', value: 'LDN' },
-        { name: 'Istanbul', value: 'IST' },
-        { name: 'Paris', value: 'PRS' }
-    ];
-
-
-
 
     const StyledSection = styled.header<ISectionProps>`
     display: flex;
@@ -39,15 +61,22 @@ export default function HomeSearch() {
     color: ${(props) => props.theme.textColor};
     font-weight: 600;
   `;
+
     const searchInputRef = useRef<HTMLInputElement>(null);
-    // const [selectSearchOps, setSelectSearchOps] = useState("product");
+    const [detailStoreGetNearRequest, setDetailStoreGetNearRequest] = useState<IStoreGetNearRequestModel>(emptyStoreGetNearRequest);
     const [selectProvinceOp, setSelectProvinceOp] = useState<number>(0);
     const [selectDistrictOp, setSelectDistrictOp] = useState<number>(0);
     const [selectWardOp, setSelectWardOp] = useState<number>(0);
     const [selectCategoriesOps, setSelectCategoriesOps] = useState<string[]>([]);
     const [listProvincesOps, setListProvincesOps] = useState<ISelectBoxValueModel[]>([]);
     const [listDistrictOps, setListDistrictOps] = useState<ISelectBoxValueModel[]>([]);
+    const [listCategoriesOps, setListCategoriesOps] = useState<ISelectBoxValueModel[]>([]);
     const [listWardOps, setListWardOps] = useState<ISelectBoxValueModel[]>([]);
+    const { setShowModelToast } = useContext<IToastValueContext>(ToastContext);
+    const dispatch = useAppDispatch();
+    console.log(detailStoreGetNearRequest);
+
+
     const selectedFilterDropDownTemplate = (option: ISelectBoxValueModel, props: any) => {
         if (option) {
             return (
@@ -59,6 +88,7 @@ export default function HomeSearch() {
 
         return <span>{props.placeholder}</span>;
     };
+
     const filterDropDownOptionTemplate = (option: ISelectBoxValueModel) => {
         return (
             <div className="flex align-items-center">
@@ -72,11 +102,92 @@ export default function HomeSearch() {
         if (searchInputRef.current) {
             searchInputRef.current.value = '';
         }
+        if (selectDistrictOp) {
+            setSelectDistrictOp(0)
+        }
+        if (selectProvinceOp) {
+            setSelectProvinceOp(0)
+        }
+        if (selectWardOp) {
+            setSelectWardOp(0)
+        }
+        setDetailStoreGetNearRequest(emptyStoreGetNearRequest)
+        dispatch(getListNearStoreAction(emptyListStoresNear))
     }
+    const handleSearchSubmit = async () => {
+        let request: IStoreGetNearRequestModel;
+        const currentLocation: IGeolocation = JSON.parse(localStorage.getItem("currentLocation")!);
+        if (searchInputRef.current && searchInputRef.current.value.length > 0) {
+            const searchValue = searchInputRef.current.value;
+            const pagingRequest: IPaginationRequestModel = {
+                pageIndex: 1,
+                pageSize: 10000000,
+            };
+            // Check if current location is available and no detailStoreGetNearRequest data
+            if (detailStoreGetNearRequest.province.length > 0 ||
+                detailStoreGetNearRequest.district.length > 0 ||
+                detailStoreGetNearRequest.ward.length > 0) {
+                request = {
+                    province: detailStoreGetNearRequest.province,
+                    district: detailStoreGetNearRequest.district,
+                    ward: detailStoreGetNearRequest.ward,
+                    keyWord: searchValue,
+                    categories: detailStoreGetNearRequest.categories
+                };
+                const res: IStorePaginationResponseModel = await getListNearStoreService(request, pagingRequest)
+                console.log(res);
+                dispatch(getListNearStoreAction(res))
+            }
+            else if (detailStoreGetNearRequest.province.length == 0 &&
+                detailStoreGetNearRequest.district.length == 0 &&
+                detailStoreGetNearRequest.ward.length == 0
+            ) {
+                if (currentLocation) {
 
-    const handleSeachSubmit = () => {
-        console.log(searchInputRef.current?.value);
-    }
+                    const { latitude, longitude } = currentLocation;
+                    const responseGeolocation: IReverseGeolocationResponseModel = await getReverseGeocodingService({ latitude, longitude });
+                    request = {
+                        province: responseGeolocation.address.city,
+                        district: responseGeolocation.address.suburb,
+                        ward: responseGeolocation.address.quarter,
+                        keyWord: searchValue,
+                        categories: detailStoreGetNearRequest.categories
+                    };
+
+                    const res: IStorePaginationResponseModel = await getListNearStoreService(request, pagingRequest)
+                    console.log(res);
+                    dispatch(getListNearStoreAction(res))
+
+                }
+                else {
+                    setShowModelToast({
+                        severity: "error",
+                        summary: "Error",
+                        detail: "Current location unidentified",
+                    });
+                }
+            }
+            else {
+                setShowModelToast({
+                    severity: "error",
+                    summary: "Error",
+                    detail: "Make sure filter have value",
+                });
+
+            }
+
+
+            // Additional conditions can be added as needed
+        } else {
+            setShowModelToast({
+                severity: "error",
+                summary: "Error",
+                detail: "Search value can't empty",
+            });
+            dispatch(getListNearStoreAction(emptyListStoresNear))
+
+        }
+    };
     const handleGetListProvinces = async () => {
         setListProvincesOps([]);
         const res: IOApiProvinceModel = await getListProvincesService();
@@ -88,6 +199,19 @@ export default function HomeSearch() {
             }))
         ]);
     };
+    const handleGetListCategories = async () => {
+
+        const res = await getListParentCategoryService(pagingAllListRequest);
+        setListCategoriesOps((prevList) => [
+            ...prevList,
+            ...res.data.map((item: ICategoryModel) => ({
+                name: item.name,
+                value: item.id
+            }))
+        ]);
+
+    }
+
     const handleGetListDistricts = async (provinceId: number) => {
         setListDistrictOps([]);
         const res: IOApiDistrictModel = await getListDistrictsService(provinceId);
@@ -113,8 +237,14 @@ export default function HomeSearch() {
     };
 
     useEffect(() => {
-        handleGetListProvinces();
+        (async () => {
+            handleGetListProvinces();
+            handleGetListCategories();
+        })()
     }, [])
+    // useEffect(() => {
+    //     setListCategoriesOps
+    // }, [])
     return (
         <StyledSection isdarktheme={isDarkTheme.toString()}>
             <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 flex flex-column justify-content-center">
@@ -139,56 +269,60 @@ export default function HomeSearch() {
                                     placeholder={"Find Retail Store"}
                                     ref={searchInputRef}
 
+
                                     style={{ transition: 'width 0.3s ease-in-out' }}
                                 />
                             </div>
                             <div className="flex jus md:col-4 col-12 md:gap-3 gap-2  ">
-                                {/* <div className="field-radiobutton m-0 ">
-                                    <RadioButton
-                                        inputId="option1"
-                                        name="option"
-                                        value="product"
-                                        checked={selectSearchOps === "product"}
-                                        onChange={(e) => setSelectSearchOps(e.value)}
-                                    />
-                                    <label className="text-white font-bold " htmlFor="option1">Search Product</label>
-                                </div>
-                                <div className="field-radiobutton m-0">
-                                    <RadioButton
-                                        inputId="option2"
-                                        name="option"
-                                        value="store"
-                                        checked={selectSearchOps === "store"}
-                                        onChange={(e) => setSelectSearchOps(e.value)}
-                                    />
-                                    <label className="text-white font-bold" htmlFor="option2">Search Store</label>
-                                </div> */}
-                                <MultiSelect value={selectCategoriesOps} onChange={(e) => setSelectCategoriesOps(e.value)} options={sampleCategories} optionLabel="name"
+
+                                <MultiSelect value={selectCategoriesOps} onChange={(e) => {
+                                    const selectedValues = e.value;
+
+
+                                    const selectedCategories = listCategoriesOps.filter(op => selectedValues.includes(op.value)).map(op => op.value);
+
+                                    setSelectCategoriesOps(selectedCategories as string[])
+                                    setDetailStoreGetNearRequest(prevState => ({
+                                        ...prevState,
+                                        categories: selectedCategories ? selectedCategories.join(', ') : ""
+                                    }));
+                                }} options={listCategoriesOps} optionLabel="name"
                                     filter placeholder="Select Categories" maxSelectedLabels={3} className="w-full" />
                             </div>
                         </div>
                         <div className="mx-auto w-full flex flex-column md:flex-row justify-content-center">
                             <div className=" md:pr-2 mb-4 md:mb-0  md:col-4 col-12  ">
+
                                 <Dropdown className="w-full"
                                     value={selectProvinceOp} onChange={(e) => {
-
-
-                                        setSelectProvinceOp(e.value);
+                                        const selectedValue = e.value;
+                                        const selectedProvince = listProvincesOps.find(op => op.value === selectedValue);
+                                        setSelectProvinceOp(e.value)
                                         handleGetListDistricts(e.value);
+                                        setDetailStoreGetNearRequest(prevState => ({
+                                            ...prevState,
+                                            province: selectedProvince ? selectedProvince.name : ""
+                                        }));
+
                                     }}
                                     options={listProvincesOps}
                                     optionLabel="name" placeholder="Select Province"
                                     filter valueTemplate={selectedFilterDropDownTemplate} itemTemplate={filterDropDownOptionTemplate} />
+
                             </div>
                             <div className="md:pr-2 mb-4 md:mb-0  md:col-4 col-12  ">
                                 <Dropdown className="w-full"
                                     value={selectDistrictOp}
-                                    onChange={(e) => {
-                                        setSelectDistrictOp(e.value);
-                                        handleGetListWards(e.value);
-                                    }
 
-                                    }
+                                    onChange={(e) => {
+                                        const selectedValue = listDistrictOps.find(op => op.value === e.value);
+                                        setSelectDistrictOp(e.value)
+                                        handleGetListWards(e.value);
+                                        setDetailStoreGetNearRequest(prevState => ({
+                                            ...prevState,
+                                            district: selectedValue ? selectedValue.name : ""
+                                        }));
+                                    }}
                                     options={listDistrictOps}
                                     optionLabel="name"
                                     placeholder="Select District"
@@ -199,8 +333,14 @@ export default function HomeSearch() {
                             <div className="md:pr-2 mb-4 md:mb-0  md:col-4 col-12  ">
                                 <Dropdown className="w-full"
                                     value={selectWardOp}
+
                                     onChange={(e) => {
-                                        setSelectWardOp(e.value);
+                                        const selectedValue = listWardOps.find(op => op.value === e.value);
+                                        setSelectWardOp(e.value)
+                                        setDetailStoreGetNearRequest(prevState => ({
+                                            ...prevState,
+                                            ward: selectedValue ? selectedValue.name : ""
+                                        }));
                                     }}
                                     options={listWardOps}
                                     optionLabel="name"
@@ -212,12 +352,16 @@ export default function HomeSearch() {
                         <div className="mx-auto w-full flex justify-content-center gap-2 md:py-3">
                             <div className="md:pr-2 mb-4 md:mb-0    ">
 
-                                <Button onClick={handleSeachSubmit} severity="success" label="Search"></Button>
+                                <Button onClick={handleSearchSubmit} severity="success" label="Search"></Button>
                             </div>
                             <div className="md:pr-2 mb-4 md:mb-0    ">
 
                                 <Button onClick={handleClearSearch} severity="warning" label="Clear"></Button>
                             </div>
+
+
+
+
 
 
 

@@ -1,5 +1,8 @@
 import { IPaginationRequestModel } from "../models/paginationModel";
-import { IStoreModel, IStoreRequestModel } from "../models/storeModel";
+import {
+  IStoreGetNearRequestModel,
+  IStoreRequestModel,
+} from "../models/storeModel";
 import axiosInstance, {
   CONTENT_TYPE_FORM_DATA,
   CONTENT_TYPE_JSON,
@@ -17,6 +20,42 @@ export const getListStoreService = async (request: IPaginationRequestModel) => {
     }
     // Make the API request with query parameters
     const res = await axiosInstance.get(`/store/getAll?${params.toString()}`);
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getListNearStoreService = async (
+  getNearStoreRequest: IStoreGetNearRequestModel,
+  pagingRequest: IPaginationRequestModel
+) => {
+  const { pageSize = 10, pageIndex = 1 } = pagingRequest;
+  const { district, ward, province, keyWord, categories } = getNearStoreRequest;
+  try {
+    const params = new URLSearchParams({
+      PageSize: pageSize.toString(),
+      PageIndex: pageIndex.toString(),
+    });
+    if (district.length > 0) {
+      params.append("district", district);
+    }
+    if (ward.length > 0) {
+      params.append("ward", ward);
+    }
+    if (province.length > 0) {
+      params.append("province", province);
+    }
+    if (keyWord.length > 0) {
+      params.append("keyWord", keyWord);
+    }
+    if (categories.length > 0) {
+      params.append("categories", categories);
+    }
+    // Make the API request with query parameters
+    const res = await axiosInstance.get(
+      `/store/getNearStore?${params.toString()}`
+    );
     return res.data;
   } catch (error) {
     return error;
@@ -97,33 +136,14 @@ export const updateStoreService = async (
   }
 };
 
-export const calAverageRatingValueFunc = (arrRating: number[]) => {
-  if (arrRating.length === 0) {
-    return 0;
-  }
-  const sum = arrRating.reduce(
-    (total, currentValue) => total + currentValue,
-    0
-  );
-  const avgRating = sum / arrRating.length;
-  return avgRating;
-};
-
-const calculateAverageRating = (reviews: IReviewModel[]): number => {
-  if (reviews.length === 0) return 0;
-  const totalRating = reviews.reduce(
-    (sum, review) => sum + review.ratingValue,
-    0
-  );
-  return totalRating / reviews.length;
-};
-export const updateStoresWithAverageRating = (
-  stores: IStoreModel[]
-): IStoreModel[] => {
-  return stores.map((store) => ({
-    ...store,
-    averageRating: 0,
-
-    //store.reviews && calculateAverageRating(store.reviews),
-  }));
-};
+// export const calAverageRatingValueFunc = (arrRating: number[]) => {
+//   if (arrRating.length === 0) {
+//     return 0;
+//   }
+//   const sum = arrRating.reduce(
+//     (total, currentValue) => total + currentValue,
+//     0
+//   );
+//   const avgRating = sum / arrRating.length;
+//   return avgRating;
+// };

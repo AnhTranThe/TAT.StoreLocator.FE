@@ -1,16 +1,19 @@
 import { Rating } from "primereact/rating";
 import { useState } from "react";
 import { useAppSelector } from "../../../hooks/ReduxHook";
-import { IStoreModel } from "../../../models/storeModel";
+import { IStoreModel, IStoreSimpleResponseModel } from "../../../models/storeModel";
 import { setActiveInfoDetailAction, setActiveInfoItemAction } from "../../../store/action/infoDetailAction";
 import { getDetailStoreInfo } from "../../../store/action/storeAction";
+import { IActiveInfoItem } from '../../../store/reducer/infoDetailReducer';
 import { IThemeReducer } from "../../../store/reducer/themeReducer";
 import { useAppDispatch } from "../../../store/store";
+import { calculateAverageRating } from "../../../utils/Utilities";
 import './InfoItem.css';
-import { IActiveInfoItem } from '../../../store/reducer/infoDetailReducer';
 
-export default function InfoItem({ infoStoreItem }: { infoStoreItem: IStoreModel }) {
+export default function InfoItem({ infoStoreItem }: { infoStoreItem: IStoreModel | IStoreSimpleResponseModel }) {
     //onInfoItemClick: (e: React.MouseEvent<HTMLDivElement>) => void }
+    console.log(infoStoreItem);
+
     const dispatch = useAppDispatch();
     const { isDarkTheme }: { isDarkTheme: boolean } = useAppSelector(
         (state: IThemeReducer) => state.themeReducer
@@ -24,7 +27,7 @@ export default function InfoItem({ infoStoreItem }: { infoStoreItem: IStoreModel
         <div key={infoStoreItem.id} onClick={() => {
             dispatch(setActiveInfoItemAction(infoStoreItem.id, true))
             dispatch(setActiveInfoDetailAction(true))
-            dispatch(getDetailStoreInfo(infoStoreItem))
+            dispatch(getDetailStoreInfo(infoStoreItem.id))
         }}
             className={`p-1 surface-card mb-4  cursor-pointer border-round-2xl ${isDarkTheme
                 ? "hover-item-dark-effect"
@@ -78,8 +81,8 @@ export default function InfoItem({ infoStoreItem }: { infoStoreItem: IStoreModel
                     )}
 
                     <a className=" flex pb-4 gap-2 ">
-                        <Rating value={infoStoreItem.averageRating} readOnly cancel={false} />
-                        ({infoStoreItem.averageRating})
+                        <Rating value={calculateAverageRating(infoStoreItem.reviews)} readOnly cancel={false} />
+                        ({infoStoreItem.reviews.length})
 
                     </a>
                     <div className="flex gap-2 ">

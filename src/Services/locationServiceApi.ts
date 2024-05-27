@@ -27,7 +27,6 @@ export const getReverseGeocodingService = async ({
         format: "json",
       },
     });
-    console.log("res.data", res.data);
     return res.data;
   } catch (error) {
     console.log(error);

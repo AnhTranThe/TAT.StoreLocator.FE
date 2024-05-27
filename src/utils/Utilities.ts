@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import { jwtDecode } from "jwt-decode";
 import { IMapGalleryStoreModel } from "../models/galleryModel";
+import { IReviewModel } from "../models/reviewModel";
 
 export const formatDateTime = (dateTimeOffet: string) => {
   const currentDate = dayjs(dateTimeOffet); // Get current date with dayjs
@@ -101,3 +102,23 @@ export const convertToFileArray = async (
 
   return Promise.all(filePromises);
 };
+
+export const calculateAverageRating = (reviews: IReviewModel[]): number => {
+  if (reviews.length === 0) return 0;
+  const totalRating = reviews.reduce(
+    (sum, review) => sum + review.ratingValue,
+    0
+  );
+  return totalRating / reviews.length;
+};
+
+// export const updateStoresWithAverageRating = (
+//   stores: IStoreModel[]
+// ): IStoreModel[] => {
+//   return stores.map((store) => ({
+//     ...store,
+//     averageRating: 0,
+
+//     //store.reviews && calculateAverageRating(store.reviews),
+//   }));
+// };

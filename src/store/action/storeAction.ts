@@ -1,25 +1,29 @@
-import { IStoreModel } from "../../models/storeModel";
+import { IStorePaginationResponseModel } from "../../models/storeModel";
+import axiosInstance from "../../Services/configAxiosService";
 import { AppDispatch } from "../store";
-import {
-  GET_DETAIL_STORE,
-  GET_LIST_STORE_BY_SEARCH_KEY,
-} from "../type/actionType";
+import { GET_DETAIL_STORE, GET_LIST_STORES_NEAR } from "../type/actionType";
 
-export const getDetailStoreInfo = (e: IStoreModel) => {
+export const getDetailStoreInfo =
+  (storeId: string) => async (dispatch: AppDispatch) => {
+    const res = await axiosInstance.get(`/store/getDetail/${storeId}`);
+    if (res) {
+      console.log(res);
+
+      dispatch({
+        type: GET_DETAIL_STORE,
+        payload: res.data,
+      });
+    }
+  };
+export const getListNearStoreAction = (e: IStorePaginationResponseModel) => {
   return (dispatch: AppDispatch) => {
     dispatch({
-      type: GET_DETAIL_STORE,
+      type: GET_LIST_STORES_NEAR,
       payload: e,
     });
   };
 };
-export const getListStoreItemsBySearchKeyAction =
-  (e: IStoreModel[]) => async (dispatch: AppDispatch) => {
-    dispatch({
-      type: GET_LIST_STORE_BY_SEARCH_KEY,
-      payload: e,
-    });
-  };
+
 // export const getListStoreItemsAction = () => async (dispatch: AppDispatch) => {
 //   const res = await axiosInstance.get("/project");
 //   if (res) {

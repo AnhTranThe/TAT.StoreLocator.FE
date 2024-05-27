@@ -12,7 +12,7 @@ const ProgressBar = (props: any) => {
         if (completed > 70 && completed < 100) {
             updateBgColor("#2DAB7E");
         } else if (completed > 30 && completed < 70) {
-            updateBgColor("#F2CA27");
+            updateBgColor("#dc5d33");
         } else if (completed > 10 && completed < 30) {
             updateBgColor("#dc5d33");
         } else if (completed > 0 && completed < 10) {

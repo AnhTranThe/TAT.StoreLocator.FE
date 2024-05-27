@@ -1,0 +1,30 @@
+.review-item {
+  border-bottom: 1px solid #e9ecef;
+  padding: 30px 0;
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+
+  h3 {
+    margin: 0;
+    font-size: 1.2em;
+    color: #343a40;
+  }
+
+  .review-rating {
+    color: #ffcc00; /* Gold color for stars */
+  }
+}
+
+.review-content {
+  margin: 0;
+  font-size: 1em;
+  //color: #495057;
+}
