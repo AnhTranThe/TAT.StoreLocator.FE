@@ -1,6 +1,5 @@
 import { Rating } from "primereact/rating";
 import { useCallback, useContext, useEffect, useState } from "react";
-import styled from "styled-components";
 import ProgressBar from "../../../components/Common/ProgressBar";
 import { useAppSelector } from "../../../hooks/ReduxHook";
 import { IPaginationRequestModel } from "../../../models/paginationModel";
@@ -9,7 +8,6 @@ import { IStoreModel } from "../../../models/storeModel";
 import { getListReviewsByStoreService } from "../../../Services/reviewServiceApi";
 import { calculateAverageRating } from "../../../utils/Utilities";
 import { IToastValueContext, ToastContext } from "../../context/toastContext";
-import ReviewItem from "../ReviewItem/ReviewItem";
 
 export default function RatingOverview({ type, typeId }: { type: string, typeId: string }) {
 
@@ -21,14 +19,13 @@ export default function RatingOverview({ type, typeId }: { type: string, typeId:
     const [countPercentStar3, setCountPercentStar3] = useState<number>(0);
     const [countPercentStar2, setCountPercentStar2] = useState<number>(0);
     const [countPercentStar1, setCountPercentStar1] = useState<number>(0);
-    const [loading, setLoading] = useState<boolean>(false)
     const { setShowModelToast } = useContext<IToastValueContext>(ToastContext);
     const { detailStoreItemInfo }: { detailStoreItemInfo: IStoreModel } = useAppSelector(
         (state) => state.storeReducer
     )
 
     const fetchReviewsByStore = useCallback(async (request: IBaseReviewFilterRequestModel) => {
-        setLoading(true);
+
         try {
             const res: IReviewPaginationResponseModel = await getListReviewsByStoreService(request);
             const listReviews = res.data;
@@ -54,9 +51,7 @@ export default function RatingOverview({ type, typeId }: { type: string, typeId:
                 detail: "Failed to fetch reviews",
             });
         }
-        finally {
-            setLoading(false);
-        }
+
     }, [setShowModelToast]);
     console.log(listReviews);
 

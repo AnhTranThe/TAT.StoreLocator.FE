@@ -14,8 +14,9 @@
 //     Roles: string[] | null;
 //   }
 
-import { IAddressModel, IAddressStoreRequestModel } from "./addressModel";
+import { IAddressModel } from "./addressModel";
 import { IBaseEntityModel } from "./baseEntityModel";
+import { IBaseResponseModel } from "./commonModel";
 import { IMapGalleryStoreModel } from "./galleryModel";
 import { IPaginationResponseModel } from "./paginationModel";
 import { IProductSimpleModel } from "./productModel";
@@ -42,22 +43,34 @@ export interface IStorePaginationResponseModel
 }
 
 export interface IStoreSimpleResponseModel {
-  id: string;
-  name: string;
-  email: string;
-  phoneNumber: string;
-  address: IAddressModel;
-  products: IProductSimpleModel[];
-  reviews: IReviewModel[];
+  id?: string;
+  name?: string;
+  email?: string;
+  phoneNumber?: string;
+  address?: IAddressModel;
+  products?: IProductSimpleModel[];
+  reviews?: IReviewModel[];
+  images?: IMapGalleryStoreModel[];
 }
 
 export interface IStoreRequestModel {
   name: string | "";
   email: string | "";
   phoneNumber: string | "";
-  address: IAddressStoreRequestModel;
+  roadName: string | "";
+  province: string | "";
+  district: string | "";
+  ward: string | "";
+  postalCode: string | "";
+  latitude: number | 0;
+  longitude: number | 0;
   isActive: boolean | true;
   // files: File[] | [];
+}
+
+export interface ICreateStoreResponseModel {
+  baseResponse: IBaseResponseModel;
+  storeResponseModel: IStoreModel;
 }
 
 export interface IStoreGetNearRequestModel {

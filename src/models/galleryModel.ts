@@ -16,6 +16,7 @@ export interface IMapGalleryStoreModel {
   fileName: string;
   url: string;
   isThumbnail: boolean;
+  storeId: string;
 }
 export interface IGalleryUploadRequestModel {
   fileUpload?: File;

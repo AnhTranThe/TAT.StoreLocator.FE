@@ -11,16 +11,16 @@ export interface IAddressModel extends IBaseEntityModel {
 }
 
 export interface IGeolocation {
-  latitude: number;
-  longitude: number;
+  latitude: number | undefined;
+  longitude: number | undefined;
 }
 
-export interface IAddressStoreRequestModel {
-  roadName: string | "";
-  province: string | "";
-  district: string | "";
-  ward: string | "";
-  postalCode: string | "";
-  latitude: number | 0;
-  longitude: number | 0;
-}
+// export interface IAddressStoreRequestModel {
+//   roadName: string | "";
+//   province: string | "";
+//   district: string | "";
+//   ward: string | "";
+//   postalCode: string | "";
+//   latitude: number | 0;
+//   longitude: number | 0;
+// }

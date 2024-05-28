@@ -12,7 +12,6 @@ import './InfoItem.css';
 
 export default function InfoItem({ infoStoreItem }: { infoStoreItem: IStoreModel | IStoreSimpleResponseModel }) {
     //onInfoItemClick: (e: React.MouseEvent<HTMLDivElement>) => void }
-    console.log(infoStoreItem);
 
     const dispatch = useAppDispatch();
     const { isDarkTheme }: { isDarkTheme: boolean } = useAppSelector(
@@ -25,9 +24,9 @@ export default function InfoItem({ infoStoreItem }: { infoStoreItem: IStoreModel
 
     return (
         <div key={infoStoreItem.id} onClick={() => {
-            dispatch(setActiveInfoItemAction(infoStoreItem.id, true))
+            infoStoreItem.id && dispatch(setActiveInfoItemAction(infoStoreItem.id, true))
             dispatch(setActiveInfoDetailAction(true))
-            dispatch(getDetailStoreInfo(infoStoreItem.id))
+            infoStoreItem.id && dispatch(getDetailStoreInfo(infoStoreItem.id))
         }}
             className={`p-1 surface-card mb-4  cursor-pointer border-round-2xl ${isDarkTheme
                 ? "hover-item-dark-effect"
@@ -81,8 +80,8 @@ export default function InfoItem({ infoStoreItem }: { infoStoreItem: IStoreModel
                     )}
 
                     <a className=" flex pb-4 gap-2 ">
-                        <Rating value={calculateAverageRating(infoStoreItem.reviews)} readOnly cancel={false} />
-                        ({infoStoreItem.reviews.length})
+                        <Rating value={infoStoreItem.reviews && calculateAverageRating(infoStoreItem.reviews)} readOnly cancel={false} />
+                        ({infoStoreItem.reviews && infoStoreItem.reviews.length})
 
                     </a>
                     <div className="flex gap-2 ">

@@ -112,6 +112,99 @@ export const calculateAverageRating = (reviews: IReviewModel[]): number => {
   return totalRating / reviews.length;
 };
 
+export const vietnameseReplace = (str: string) => {
+  str = str.toLowerCase();
+  str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+  str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+  str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+  str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+  str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+  str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+  str = str.replace(/đ/g, "d");
+  return str.toUpperCase();
+};
+
+export const vietnameseNotUpperReplace = (str: string) => {
+  str = str.toLowerCase();
+  str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+  str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+  str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+  str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+  str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+  str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+  str = str.replace(/đ/g, "d");
+  return str;
+};
+
+export const extractLatLonFromGoogleMapsUrl = (url: string) => {
+  const regex = /@(-?\d+\.\d+),(-?\d+\.\d+)/;
+  const match = url.match(regex);
+
+  if (match) {
+    const latitude = parseFloat(match[1]);
+    const longitude = parseFloat(match[2]);
+    return { latitude, longitude };
+  } else {
+    return null;
+  }
+};
+export const replaceProvincePatterns = (province: string) => {
+  if (!province || typeof province !== "string") {
+    return province;
+  }
+
+  // Make the string Vietnamese-friendly
+  province = vietnameseNotUpperReplace(province);
+
+  // Define the patterns to match "city", "thanh pho", and "tinh"
+  const patterns = ["city", "thanh\\s*pho", "tinh"];
+
+  // Create the regular expression pattern
+  const pattern = new RegExp("\\b(?:" + patterns.join("|") + ")\\b", "gi");
+
+  // Replace the matched patterns with an empty string
+  return province.replace(pattern, "").trim();
+};
+
+export const replaceDistrictPatterns = (district: string) => {
+  if (!district || typeof district !== "string") {
+    return district;
+  }
+
+  // Make the string Vietnamese-friendly
+  district = vietnameseNotUpperReplace(district);
+
+  // Define the patterns to match "quan", "q.", "district", "h.", "huyen", and "thanh pho"
+  const patterns = [
+    "quan",
+    "q\\.",
+    "district",
+    "h\\.",
+    "huyen",
+    "thanh\\s*pho",
+  ];
+
+  // Create the regular expression pattern
+  const pattern = new RegExp("\\b(?:" + patterns.join("|") + ")\\b", "gi");
+
+  // Replace the matched patterns with an empty string
+  return district.replace(pattern, "").trim();
+};
+
+export const replaceWardPatterns = (ward: string) => {
+  if (!ward || typeof ward !== "string") {
+    return ward;
+  }
+
+  // Make the string Vietnamese-friendly
+  ward = vietnameseNotUpperReplace(ward);
+
+  // Define the pattern to match "phuong", "p.", or "ward" (case-insensitive)
+  const pattern = /\b(?:phuong|p\.|ward)\b/gi;
+
+  // Replace the matched patterns with an empty string
+  return ward.replace(pattern, "").trim();
+};
 // export const updateStoresWithAverageRating = (
 //   stores: IStoreModel[]
 // ): IStoreModel[] => {

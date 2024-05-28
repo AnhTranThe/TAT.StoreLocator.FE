@@ -1,5 +1,6 @@
 import { EReviewStatusType } from "../enums";
 import { IBaseEntityModel } from "./baseEntityModel";
+import { IBaseResponseModel } from "./commonModel";
 import {
   IPaginationRequestModel,
   IPaginationResponseModel,
@@ -22,4 +23,15 @@ export interface IBaseReviewFilterRequestModel extends IPaginationRequestModel {
 export interface IReviewPaginationResponseModel
   extends IPaginationResponseModel {
   data: IReviewModel[];
+}
+export interface IReviewRequestModel {
+  typeId: string;
+  content: string;
+  type: string;
+  userId: string;
+  ratingValue: number;
+  status: EReviewStatusType;
+}
+export interface IReviewResultResponseModel extends IBaseResponseModel {
+  Data: IReviewModel[];
 }

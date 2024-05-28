@@ -262,7 +262,7 @@ export default function ClientAppTopbar() {
   ];
   return (
     <>
-      <StyledHeader className="mx-auto md:px-3 md:py-3 sm: px-1 sm: py-1 " isdarktheme={isDarkTheme.toString()} >
+      <StyledHeader className="mx-auto md:px-3 md:py-3 sm: px-1 sm: py-1 " isdarktheme={isDarkTheme.toString() ?? 'true'} >
         <div className="relative flex h-3rem  align-items-center w-full ">
           {/* Content for mobile screens */}
           <div className="main-menu-mobile-mode w-full">

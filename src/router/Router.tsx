@@ -2,7 +2,6 @@ import { useRoutes } from "react-router-dom";
 import HomeContainer from "../pages/Client/HomeContainer/HomeContainer";
 import ManagementBox from "../pages/Client/ManagerBox/ManagerBox";
 import ProfileManage from "../pages/Client/ProfileManage/ProfileManage";
-import ReviewBox from "../pages/Client/ReviewBox/ReviewBox";
 import SearchBox from "../pages/Client/SearchBox/SearchBox";
 import WishlistBox from "../pages/Client/WishlistBox/WishlistBox";
 import ClientLayout from "../pages/ClientLayout";
@@ -86,10 +85,7 @@ const Router = () => {
               path: "/wishlists/:userId",
               element: <WishlistBox />
             },
-            {
-              path: "/reviews/:userId",
-              element: <ReviewBox />
-            },
+
           ]
         },
         {

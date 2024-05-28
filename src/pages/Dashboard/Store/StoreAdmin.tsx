@@ -11,15 +11,16 @@ import { RadioButton, RadioButtonChangeEvent } from "primereact/radiobutton";
 import { Tag } from "primereact/tag";
 import { Toolbar } from "primereact/toolbar";
 import React, { ChangeEvent, useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ISelectBoxValueModel } from "../../../models/commonModel";
 import { IOApiDistrictModel, IOApiProvinceModel, IOApiWardModel } from "../../../models/oApiModel";
 import { IPaginationRequestModel } from "../../../models/paginationModel";
-import { IStoreModel, IStorePaginationResponseModel, IStoreRequestModel } from "../../../models/storeModel";
+import { ICreateStoreResponseModel, IStoreModel, IStorePaginationResponseModel, IStoreRequestModel } from '../../../models/storeModel';
 import { getListDistrictsService, getListProvincesService, getListWardsService } from "../../../Services/addressServiceApi";
 import { createNewStoreService, getListStoreService, updateStoreService } from "../../../Services/storeServiceApi";
+import { extractLatLonFromGoogleMapsUrl, replaceDistrictPatterns, replaceProvincePatterns, replaceWardPatterns } from "../../../utils/Utilities";
 import { validateStore } from "../../../utils/yup";
 import { IToastValueContext, ToastContext } from "../../context/toastContext";
-import { useNavigate } from "react-router-dom";
 
 
 // const emptyStore: IStoreModel = {
@@ -54,15 +55,13 @@ const emptyStoreRequest: IStoreRequestModel = {
     name: "",
     email: "",
     phoneNumber: "",
-    address: {
-        roadName: "",
-        province: "",
-        district: "",
-        ward: "",
-        postalCode: "",
-        latitude: 0,
-        longitude: 0
-    },
+    roadName: "",
+    province: "",
+    district: "",
+    ward: "",
+    postalCode: "",
+    latitude: 0,
+    longitude: 0,
     isActive: true,
     // files: []
 }
@@ -93,6 +92,7 @@ export default function StoreAdmin() {
     const [selectProvinceOp, setSelectProvinceOp] = useState<string | boolean>('');
     const [selectDistrictOp, setSelectDistrictOp] = useState<string | boolean>('');
     const [selectWardOp, setSelectWardOp] = useState<string | boolean>('');
+    const [selectUpdateStoreId, setUpdateStoreId] = useState<string>("");
 
 
     const fetchProvinces = async () => {
@@ -134,7 +134,7 @@ export default function StoreAdmin() {
         setLoading(true);
         try {
             const res: IStorePaginationResponseModel = await getListStoreService(request);
-            setListStores(res.data);
+            setListStores(res.data as IStoreModel[])
             setTotalRecords(res.totalCount);
         } catch (error) {
             setShowModelToast({
@@ -169,6 +169,7 @@ export default function StoreAdmin() {
         setDialogVisible(true);
         setIsNewStore(true);
         setDetailStoreRequest(emptyStoreRequest);
+        setUpdateStoreId('');
     };
     const handleSearchSubmit = () => {
         const value = searchInputRef.current?.value || '';
@@ -197,21 +198,22 @@ export default function StoreAdmin() {
             name: detail.name,
             email: detail.email,
             phoneNumber: detail.phoneNumber ? detail.phoneNumber : "",
-            address: {
-                roadName: detail.address?.roadName || "",
-                province: detail.address?.province || "",
-                district: detail.address?.district || "",
-                ward: detail.address?.ward || "",
-                postalCode: detail.address?.postalCode || "",
-                latitude: detail.address?.latitude || 0,
-                longitude: detail.address?.longitude || 0
-            },
+            roadName: detail.address?.roadName || "",
+            province: detail.address?.province || "",
+            district: detail.address?.district || "",
+            ward: detail.address?.ward || "",
+            postalCode: detail.address?.postalCode || "",
+            latitude: detail.address?.latitude || 0,
+            longitude: detail.address?.longitude || 0,
             isActive: detail.isActive,
         }
 
 
-        if (updateRequest.address.province) {
-            const existingProvince = listProvincesOps.find(op => op.name === updateRequest.address.province.trim());
+
+        if (updateRequest.province) {
+            const existingProvince = listProvincesOps.find(op => replaceProvincePatterns(op.name).toUpperCase().includes(updateRequest.province.trim().toUpperCase()));
+
+
             if (existingProvince) {
                 await fetchDistricts(Number(existingProvince.value));
                 setSelectProvinceOp(existingProvince.value)
@@ -219,23 +221,24 @@ export default function StoreAdmin() {
 
         }
 
+        if (updateRequest.district && listDistrictOps.length > 0) {
 
-        if (updateRequest.address.district && listDistrictOps.length > 0) {
-            const existingDistrict = listDistrictOps.find(op => op.name === updateRequest.address.district.trim());
+            const existingDistrict = listDistrictOps.find(op => replaceDistrictPatterns(op.name).toUpperCase().includes(updateRequest.district.trim().toUpperCase()));
             if (existingDistrict) {
                 await fetchWards(Number(existingDistrict.value));
                 setSelectDistrictOp(existingDistrict.value)
             }
 
         }
-        if (updateRequest.address.ward) {
-            const existingWard = listWardOps.find(op => op.name === updateRequest.address.ward);
+        if (updateRequest.ward && listWardOps.length > 0) {
+            const existingWard = listWardOps.find(op => replaceWardPatterns(op.name).toUpperCase().includes(updateRequest.ward.trim().toUpperCase()));
             existingWard && setSelectWardOp(existingWard.value)
         }
 
 
         setDetailStoreRequest(updateRequest)
         setDialogVisible(true);
+        setUpdateStoreId(detail.id);
         setIsNewStore(false);
     };
     const handleCancel = () => {
@@ -247,8 +250,9 @@ export default function StoreAdmin() {
 
     const handleCreateNewStore = async (data: IStoreRequestModel) => {
         try {
-            const res = await createNewStoreService(data);
-            if (res.success) {
+            const res: ICreateStoreResponseModel = await createNewStoreService(data);
+            console.log(res);
+            if (res.baseResponse.success) {
                 setShowModelToast({
                     severity: "success",
                     summary: "Success",
@@ -265,7 +269,7 @@ export default function StoreAdmin() {
                 setShowModelToast({
                     severity: "warn",
                     summary: "Warning",
-                    detail: res?.message || "Something went wrong",
+                    detail: res?.baseResponse.message || "Something went wrong",
                 });
             }
         } catch (error) {
@@ -278,6 +282,8 @@ export default function StoreAdmin() {
     };
     const handleUpdateStore = async (id: string, data: IStoreRequestModel) => {
         try {
+            console.log(data);
+
             const res = await updateStoreService(id, data);
             if (res.success) {
                 setShowModelToast({
@@ -317,28 +323,33 @@ export default function StoreAdmin() {
             name: detailStoreRequest?.name || '',
             email: detailStoreRequest?.email || '',
             phoneNumber: detailStoreRequest?.phoneNumber || '',
-            roadName: detailStoreRequest?.address?.roadName || '',
-            province: detailStoreRequest?.address?.province || '',
-            district: detailStoreRequest?.address?.district || '',
-            ward: detailStoreRequest?.address?.ward || '',
-            postalCode: detailStoreRequest?.address?.postalCode || '',
-            latitude: detailStoreRequest?.address?.latitude || 0,
-            longitude: detailStoreRequest?.address?.longitude || 0,
-            isActive: detailStoreRequest?.isActive || true,
+            roadName: detailStoreRequest?.roadName || '',
+            province: detailStoreRequest?.province || '',
+            district: detailStoreRequest?.district || '',
+            ward: detailStoreRequest?.ward || '',
+            postalCode: detailStoreRequest?.postalCode || '',
+            latitude: detailStoreRequest?.latitude || 0,
+            longitude: detailStoreRequest?.longitude || 0,
+            isActive: detailStoreRequest?.isActive,
         },
         validationSchema: validateStore,
-        onSubmit: async (values) => {
+        onSubmit: async (values: IStoreRequestModel) => {
             try {
 
                 if (isNewStore) {
                     console.log("storeData", values);
+                    values.province = replaceProvincePatterns(values.province);
+                    values.district = replaceProvincePatterns(values.district);
+                    values.ward = replaceProvincePatterns(values.ward);
+                    await handleCreateNewStore(values);
 
-                    //     await handleCreateNewStore(storeData);
+
+
                 }
 
                 else {
                     console.log("storeData", values);
-                    //    await handleUpdateStore(values.id, storeData);
+                    await handleUpdateStore(selectUpdateStoreId, values);
                 }
             } catch (error) {
                 console.error("Error submitting the form: ", error);
@@ -356,6 +367,7 @@ export default function StoreAdmin() {
             <Button label="Create" icon="pi pi-plus" severity="success" onClick={openDialogForCreate} />
         </div>
     );
+    console.log(values);
 
     const leftContents = (
         <div className="flex gap-2">
@@ -395,8 +407,6 @@ export default function StoreAdmin() {
         );
     };
 
-
-
     const handleChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         setDetailStoreRequest((pre) => {
@@ -407,14 +417,31 @@ export default function StoreAdmin() {
         })
         setFieldValue(name, value);
     };
+    const handleExtractLatLonUrl = (event: ChangeEvent<HTMLInputElement>) => {
+        const { value } = event.target;
+        const extractValue = extractLatLonFromGoogleMapsUrl(value);
+        console.log(extractValue);
+        if (extractValue) {
+            const { latitude, longitude }: { latitude: number, longitude: number } = extractValue
+            setDetailStoreRequest((pre: IStoreRequestModel) => {
+                return {
+                    ...pre,
+
+                    latitude: latitude,
+                    longitude: longitude
+                }
+            })
+        }
 
 
 
+    }
 
 
     const handleChangeRadioButton = (event: RadioButtonChangeEvent) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const { name, value }: { name: string, value: any } = event.target;
+
         setDetailStoreRequest((pre) => {
             return {
                 ...pre,
@@ -441,7 +468,7 @@ export default function StoreAdmin() {
                             <ProgressSpinner />
                         </div>) : (
                         <DataTable scrollable scrollHeight="calc(100vh - 25rem)" value={listStores} size="normal" style={{ minWidth: '50rem' }} >
-                            <Column field="name" header="Store Name" body={(data: IStoreModel) => (
+                            <Column field="name" header="Store Name" style={{ maxWidth: '12rem' }} body={(data: IStoreModel) => (
                                 <React.Fragment>
                                     <span className="p-column-title">Store Name</span>
                                     {data.name}
@@ -461,7 +488,7 @@ export default function StoreAdmin() {
                                 </React.Fragment>
                             )}></Column>
 
-                            <Column field="address.roadName" header="Road Name" body={(data: IStoreModel) => (
+                            <Column field="address.roadName" header="Road Name" style={{ maxWidth: '12rem' }} body={(data: IStoreModel) => (
                                 <React.Fragment>
                                     <span className="p-column-title">Road Name</span>
                                     {data.address ? data.address.roadName : 'N/A'}
@@ -595,20 +622,7 @@ export default function StoreAdmin() {
                     </div>
 
 
-                    <div className="field col-12">
 
-                        <label htmlFor="roadName">Road name</label>
-                        <input
-                            type="text"
-                            name="roadName"
-                            id="roadName"
-                            value={values.roadName}
-                            onBlur={handleBlur}
-                            onChange={handleChangeInput}
-                            className={`p-inputtext p-component ${errors.roadName && touched.roadName ? 'p-invalid' : ''}`}
-                        />
-                        {errors.roadName && touched.roadName && <small className="p-error">{errors.roadName}</small>}
-                    </div>
 
                     <div className=" col-12 grid">
 
@@ -623,10 +637,8 @@ export default function StoreAdmin() {
                                     fetchDistricts(e.value);
                                     setDetailStoreRequest(prevState => ({
                                         ...prevState,
-                                        address: {
-                                            ...prevState.address,
-                                            province: selectedProvince ? selectedProvince.name : "" // Update province with selected province name
-                                        }
+
+                                        province: selectedProvince ? selectedProvince.name : "" // Update province with selected province name
                                     }));
 
                                 }}
@@ -650,10 +662,7 @@ export default function StoreAdmin() {
                                     fetchWards(e.value);
                                     setDetailStoreRequest(prevState => ({
                                         ...prevState,
-                                        address: {
-                                            ...prevState.address,
-                                            district: selectDistrict ? selectDistrict.name : ""
-                                        }
+                                        district: selectDistrict ? selectDistrict.name : ""
                                     }));
 
                                 }}
@@ -677,10 +686,7 @@ export default function StoreAdmin() {
                                     setSelectWardOp(e.value)
                                     setDetailStoreRequest(prevState => ({
                                         ...prevState,
-                                        address: {
-                                            ...prevState.address,
-                                            ward: selectWard ? selectWard.name : ""
-                                        }
+                                        ward: selectWard ? selectWard.name : ""
                                     }));
 
                                 }}
@@ -688,6 +694,64 @@ export default function StoreAdmin() {
                                 options={listWardOps}
                                 optionLabel="name" placeholder="Select Ward"
                                 filter valueTemplate={selectedFilterDropDownTemplate} itemTemplate={filterDropDownOptionTemplate} />
+
+                        </div>
+
+
+                    </div>
+                    <div className="field col-12">
+
+                        <label htmlFor="roadName">Road name</label>
+                        <input
+                            type="text"
+                            name="roadName"
+                            id="roadName"
+                            value={values.roadName}
+                            onBlur={handleBlur}
+                            onChange={handleChangeInput}
+                            className={`p-inputtext p-component ${errors.roadName && touched.roadName ? 'p-invalid' : ''}`}
+                        />
+                        {errors.roadName && touched.roadName && <small className="p-error">{errors.roadName}</small>}
+                    </div>
+                    <div className="field col-12">
+
+                        <label>Google map Url</label>
+                        <input
+                            type="text"
+
+                            onBlur={handleBlur}
+                            onChange={handleExtractLatLonUrl}
+                            className={`p-inputtext p-component`}
+                        />
+
+                    </div>
+                    <div className="field col-12 grid">
+                        <div className="col field">
+                            <label htmlFor="latitude">Latitude</label>
+                            <input
+                                type="text"
+                                name="latitude"
+                                id="latitude"
+                                value={values.latitude}
+                                onBlur={handleBlur}
+                                onChange={handleChangeInput}
+                                className={`p-inputtext p-component ${errors.latitude && touched.latitude ? 'p-invalid' : ''}`}
+                            />
+                            {errors.latitude && touched.latitude && <small className="p-error">{errors.latitude}</small>}
+
+                        </div>
+                        <div className="col field">
+                            <label htmlFor="longitude">Longtitude</label>
+                            <input
+                                type="text"
+                                name="longitude"
+                                id="longitude"
+                                value={values.longitude}
+                                onBlur={handleBlur}
+                                onChange={handleChangeInput}
+                                className={`p-inputtext p-component ${errors.longitude && touched.longitude ? 'p-invalid' : ''}`}
+                            />
+                            {errors.longitude && touched.longitude && <small className="p-error">{errors.longitude}</small>}
 
                         </div>
 
@@ -708,6 +772,8 @@ export default function StoreAdmin() {
                             </div>
                         ))}
                     </div>
+
+
 
                     <div className="field flex col-12">
                         <Button label="Submit" type="submit" className="mr-2" />

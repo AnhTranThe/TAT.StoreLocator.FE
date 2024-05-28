@@ -1,6 +1,7 @@
 import {
   IStoreModel,
   IStorePaginationResponseModel,
+  IStoreSimpleResponseModel,
 } from "../../models/storeModel";
 
 import { GET_DETAIL_STORE, GET_LIST_STORES_NEAR } from "../type/actionType";
@@ -27,6 +28,22 @@ const emptyDetailStoreItemInfo: IStoreModel = {
   isActive: false,
   mapGalleryStores: [],
   reviews: [],
+};
+export const emptyStoreSimple: IStoreSimpleResponseModel = {
+  id: "",
+  name: "",
+  email: "",
+  phoneNumber: "",
+  address: {
+    id: "",
+    roadName: "",
+    province: "",
+    district: "",
+    ward: "",
+    postalCode: "",
+    latitude: 0,
+    longitude: 0,
+  },
 };
 
 const emptyListStoresNear: IStorePaginationResponseModel = {

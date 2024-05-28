@@ -13,7 +13,7 @@ import { IGeolocation } from "../../../models/addressModel";
 import { ICategoryModel } from "../../../models/categoryModel";
 import { ISelectBoxValueModel } from "../../../models/commonModel";
 import { IReverseGeolocationResponseModel } from "../../../models/locationModel";
-import { IOApiDistrictModel, IOApiProvinceModel, IOApiWardModel } from '../../../models/oApiModel';
+import { IOApiDistrictData, IOApiProvinceData, IOApiWardData } from '../../../models/oApiModel';
 import { IPaginationRequestModel } from "../../../models/paginationModel";
 import { IStoreGetNearRequestModel, IStorePaginationResponseModel } from "../../../models/storeModel";
 import { getListNearStoreAction } from "../../../store/action/storeAction";
@@ -145,7 +145,7 @@ export default function HomeSearch() {
                 if (currentLocation) {
 
                     const { latitude, longitude } = currentLocation;
-                    const responseGeolocation: IReverseGeolocationResponseModel = await getReverseGeocodingService({ latitude, longitude });
+                    const responseGeolocation: IReverseGeolocationResponseModel = latitude && longitude && await getReverseGeocodingService({ latitude, longitude });
                     request = {
                         province: responseGeolocation.address.city,
                         district: responseGeolocation.address.suburb,
@@ -190,52 +190,73 @@ export default function HomeSearch() {
     };
     const handleGetListProvinces = async () => {
         setListProvincesOps([]);
-        const res: IOApiProvinceModel = await getListProvincesService();
-        setListProvincesOps((prevList) => [
-            ...prevList,
-            ...res.data.map((item) => ({
-                name: item.name,
-                value: item.id
-            }))
-        ]);
+        try {
+            const res = await getListProvincesService();
+            if (res && res.data) {
+                setListProvincesOps(res.data.map((item: IOApiProvinceData) => ({
+                    name: item.name,
+                    value: item.id
+                })));
+            } else {
+                console.error("Response data is undefined or null for provinces.");
+            }
+        } catch (error) {
+            console.error("Error fetching provinces: ", error);
+        }
     };
     const handleGetListCategories = async () => {
 
-        const res = await getListParentCategoryService(pagingAllListRequest);
-        setListCategoriesOps((prevList) => [
-            ...prevList,
-            ...res.data.map((item: ICategoryModel) => ({
-                name: item.name,
-                value: item.id
-            }))
-        ]);
+        try {
+            const res = await getListParentCategoryService(pagingAllListRequest);
+            if (res && res.data) {
+                setListCategoriesOps((prevList) => [
+                    ...prevList,
+                    ...res.data.map((item: ICategoryModel) => ({
+                        name: item.name,
+                        value: item.id
+                    }))
+                ]);
+            } else {
+                console.error("Response data is undefined or null.");
+            }
+        } catch (error) {
+            console.error("Error fetching categories: ", error);
+        }
 
     }
 
     const handleGetListDistricts = async (provinceId: number) => {
         setListDistrictOps([]);
-        const res: IOApiDistrictModel = await getListDistrictsService(provinceId);
-        setListDistrictOps((prevList) => [
-            ...prevList,
-            ...res.data.map((item) => ({
-                name: item.name,
-                value: item.id
-            }))
-        ]);
-
+        try {
+            const res = await getListDistrictsService(provinceId);
+            if (res && res.data) {
+                setListDistrictOps(res.data.map((item: IOApiDistrictData) => ({
+                    name: item.name,
+                    value: item.id
+                })));
+            } else {
+                console.error("Response data is undefined or null for districts.");
+            }
+        } catch (error) {
+            console.error("Error fetching districts: ", error);
+        }
     };
     const handleGetListWards = async (districtId: number) => {
         setListWardOps([]);
-        const res: IOApiWardModel = await getListWardsService(districtId);
-        setListWardOps((prevList) => [
-            ...prevList,
-            ...res.data.map((item) => ({
-                name: item.name,
-                value: item.id
-            }))
-        ]);
+        try {
+            const res = await getListWardsService(districtId);
+            if (res && res.data) {
+                setListWardOps(res.data.map((item: IOApiWardData) => ({
+                    name: item.name,
+                    value: item.id
+                })));
+            } else {
+                console.error("Response data is undefined or null for wards.");
+            }
+        } catch (error) {
+            console.error("Error fetching wards: ", error);
+        }
     };
-
     useEffect(() => {
         (async () => {
             handleGetListProvinces();

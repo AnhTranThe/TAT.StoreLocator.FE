@@ -1,4 +1,7 @@
-import { IBaseReviewFilterRequestModel } from "../models/reviewModel";
+import {
+  IBaseReviewFilterRequestModel,
+  IReviewRequestModel,
+} from "../models/reviewModel";
 import axiosInstance from "./configAxiosService";
 
 export const getListReviewsByStoreService = async (
@@ -36,27 +39,24 @@ export const getListReviewsByStoreService = async (
   }
 };
 
-// export const createNewCategoryService = async (
-//   request: ICategoryRequestModel
-// ) => {
-//   try {
-//     const res = await axiosInstance.post("/admin/category/add", request);
-//     return res.data;
-//   } catch (error) {
-//     return error;
-//   }
-// };
-// export const updateCategoryService = async (
-//   id: string,
-//   request: ICategoryRequestModel
-// ) => {
-//   try {
-//     const res = await axiosInstance.put(
-//       `/admin/category/update/${id}`,
-//       request
-//     );
-//     return res.data;
-//   } catch (error) {
-//     return error;
-//   }
-// };
+export const createNewReviewService = async (request: IReviewRequestModel) => {
+  try {
+    const res = await axiosInstance.post("/review/create", request);
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const updateReviewService = async (
+  reviewId: string,
+  request: IReviewRequestModel
+) => {
+  try {
+    const res = await axiosInstance.put(`/review/update/${reviewId}`, request);
+    console.log(res);
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
