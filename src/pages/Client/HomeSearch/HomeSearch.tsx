@@ -135,8 +135,8 @@ export default function HomeSearch() {
                     categories: detailStoreGetNearRequest.categories
                 };
                 const res: IStorePaginationResponseModel = await getListNearStoreService(request, pagingRequest)
-                console.log(res);
-                dispatch(getListNearStoreAction(res))
+
+                res.data && dispatch(getListNearStoreAction(res))
             }
             else if (detailStoreGetNearRequest.province.length == 0 &&
                 detailStoreGetNearRequest.district.length == 0 &&
@@ -144,7 +144,11 @@ export default function HomeSearch() {
             ) {
                 if (currentLocation) {
 
+
+
                     const { latitude, longitude } = currentLocation;
+
+
                     const responseGeolocation: IReverseGeolocationResponseModel = latitude && longitude && await getReverseGeocodingService({ latitude, longitude });
                     request = {
                         province: responseGeolocation.address.city,
@@ -153,10 +157,12 @@ export default function HomeSearch() {
                         keyWord: searchValue,
                         categories: detailStoreGetNearRequest.categories
                     };
+                    console.log(request);
+
+
 
                     const res: IStorePaginationResponseModel = await getListNearStoreService(request, pagingRequest)
-                    console.log(res);
-                    dispatch(getListNearStoreAction(res))
+                    res.data && dispatch(getListNearStoreAction(res))
 
                 }
                 else {

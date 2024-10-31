@@ -21,8 +21,8 @@ export interface IMapGalleryStoreModel {
 export interface IGalleryUploadRequestModel {
   fileUpload?: File;
   isThumbnail: boolean;
-  Type: string;
-  TypeId: string;
+  type: string;
+  typeId: string;
 }
 export interface IGalleryUpdateRequestModel {
   isThumbnail: boolean;

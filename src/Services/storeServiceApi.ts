@@ -37,17 +37,26 @@ export const getListNearStoreService = async (
     if (district.length > 0) {
       params.append("district", district);
     }
-    if (ward.length > 0) {
-      params.append("ward", ward);
+    if (ward !== undefined) {
+      if (ward.length > 0) {
+        params.append("ward", ward);
+      }
     }
-    if (province.length > 0) {
-      params.append("province", province);
+
+    if (province !== undefined) {
+      if (province.length > 0) {
+        params.append("province", province);
+      }
     }
-    if (keyWord.length > 0) {
-      params.append("keyWord", keyWord);
+    if (keyWord !== undefined) {
+      if (keyWord.length > 0) {
+        params.append("keyWord", keyWord);
+      }
     }
-    if (categories.length > 0) {
-      params.append("categories", categories);
+    if (categories !== undefined) {
+      if (categories.length > 0) {
+        params.append("categories", categories);
+      }
     }
     // Make the API request with query parameters
     const res = await axiosInstance.get(

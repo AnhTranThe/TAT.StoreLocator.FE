@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from "primereact/button";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
@@ -14,15 +15,13 @@ import { useSearchParams } from "react-router-dom";
 import { ISelectBoxValueModel } from "../../../models/commonModel";
 import { IGalleryModel, IGalleryPaginationResponseModel, IGalleryUpdateRequestModel, IGalleryUploadRequestModel, IGetListGalleryByIdRequestModel } from '../../../models/galleryModel';
 import { IPaginationRequestModel } from "../../../models/paginationModel";
-import { getAllImagesService, getListImagesByIdService, updateImageService } from "../../../Services/galleryServiceApi";
+import { getAllImagesService, getListImagesByIdService, updateImageService, uploadImageService } from "../../../Services/galleryServiceApi";
 import { IToastValueContext, ToastContext } from "../../context/toastContext";
-
 
 const listIsThumbnailStatus: ISelectBoxValueModel[] = [
     { name: "Yes", value: true },
     { name: "No", value: false }
 ];
-
 const emptyUpdateImage: IGalleryUpdateRequestModel = {
     isThumbnail: false,
     type: "",
@@ -30,12 +29,11 @@ const emptyUpdateImage: IGalleryUpdateRequestModel = {
 
 }
 
-
 const emptyUploadImage: IGalleryUploadRequestModel = {
     fileUpload: undefined,
     isThumbnail: false,
-    Type: "",
-    TypeId: ""
+    type: "",
+    typeId: ""
 }
 
 const emptyImage: IGalleryModel = {
@@ -46,9 +44,6 @@ const emptyImage: IGalleryModel = {
     fileName: "",
     publicId: ""
 }
-
-
-
 export default function GalleryAdmin() {
     const [searchParams] = useSearchParams();
     const type = searchParams.get('type');
@@ -58,7 +53,7 @@ export default function GalleryAdmin() {
     const [totalRecords, setTotalRecords] = useState<number>(0);
     const [first, setFirst] = useState(0);
     const [loading, setLoading] = useState<boolean>(false)
-
+    const [selectedFilesUpload, setSelectedFilesUpload] = useState<File[]>([]);
     const [listImages, setListImages] = useState<IGalleryModel[]>([])
     const { setShowModelToast } = useContext<IToastValueContext>(ToastContext);
     const [dialogUploadVisible, setUploadDialogVisible] = useState<boolean>(false);
@@ -135,50 +130,42 @@ export default function GalleryAdmin() {
             type: type && type.trim() || "",
             typeId: id && id.trim() || "",
         }
-        setSelectedImage({ ...selectedImage, id: detail.id, url: detail.url })
-        setDetailGalleryUpdateRequestModel(updateRequest)
+        setSelectedImage(detail)
+        setDetailGalleryUpdateRequestModel(updateRequest);
         setDialogUpdateVisible(true);
     };
     const openDialogForUpload = async () => {
+
+        const uploadRequest: IGalleryUploadRequestModel = {
+            isThumbnail: false,
+            type: type && type.trim() || "",
+            typeId: id && id.trim() || "",
+        }
+        setDetailGalleryUploadRequestModel(uploadRequest);
         setUploadDialogVisible(true);
     }
 
-    const handleUpdateImage = async (id: string, data: IGalleryUpdateRequestModel) => {
+    const handleUpdateImage = async (imageId: string, data: IGalleryUpdateRequestModel) => {
         try {
-            const res = await updateImageService(id, data);
-
+            const res = await updateImageService(imageId, data);
             if (res.success) {
                 setShowModelToast({
                     severity: "success",
                     summary: "Success",
-                    detail: "gallery updated successfully",
+                    detail: "Gallery updated successfully",
                 });
-
-                let request;
                 const paginationRequest: IPaginationRequestModel = {
-                    pageIndex: 1, // Set your default pageIndex
-                    pageSize: 10, // Set your default pageSize
-                    searchString: '' // Set your default search string
+                    pageIndex: 1,
+                    pageSize: 10,
+                    searchString: ''
                 };
-
                 if (type && id) {
-
-                    request = {
-                        ...paginationRequest,
-                        type,
-                        id
-                    };
-
-                    await fetchListImagesById(request as IGetListGalleryByIdRequestModel);
+                    await fetchListImagesById({ ...paginationRequest, type, id });
                 } else {
-
-                    request = paginationRequest;
-                    await fetchImageList(request);
+                    await fetchImageList(paginationRequest);
                 }
                 setDialogUpdateVisible(false);
             } else {
-
-
                 setShowModelToast({
                     severity: "warn",
                     summary: "Warning",
@@ -186,7 +173,6 @@ export default function GalleryAdmin() {
                 });
             }
         } catch (error) {
-
             setShowModelToast({
                 severity: "error",
                 summary: "Error",
@@ -205,6 +191,65 @@ export default function GalleryAdmin() {
             };
         });
     };
+
+
+
+
+    const handleSubmitUpload = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!selectedFilesUpload.length) {
+            setShowModelToast({
+                severity: "warn",
+                summary: "Warning",
+                detail: "Please select at least one file to upload.",
+            });
+            return;
+        }
+        const formData = new FormData();
+        selectedFilesUpload.forEach((file) => {
+            formData.append('listFilesUpload', file);
+        });
+        formData.append('isThumbnail', detailGalleryUploadRequestModel.isThumbnail.toString());
+        formData.append('type', detailGalleryUploadRequestModel.type);
+        formData.append('typeId', detailGalleryUploadRequestModel.typeId);
+
+        try {
+            console.log(formData);
+            const res = await uploadImageService(formData);
+            if (res.success) {
+                setShowModelToast({
+                    severity: "success",
+                    summary: "Success",
+                    detail: "Images uploaded successfully",
+                });
+                const paginationRequest: IPaginationRequestModel = {
+                    pageIndex: 1,
+                    pageSize: 10,
+                    searchString: ''
+                };
+                if (type && id) {
+                    await fetchListImagesById({ ...paginationRequest, type, id });
+                } else {
+                    await fetchImageList(paginationRequest);
+                }
+                setUploadDialogVisible(false);
+            } else {
+                setShowModelToast({
+                    severity: "warn",
+                    summary: "Warning",
+                    detail: res?.message || "Something went wrong",
+                });
+            }
+        } catch (error) {
+            setShowModelToast({
+                severity: "error",
+                summary: "Error",
+                detail: "Failed to upload images",
+            });
+        }
+    };
+
+
 
     const rightContents = (
         <div className="flex flex-wrap gap-2">
@@ -322,10 +367,31 @@ export default function GalleryAdmin() {
             <Button label="Clear" icon="pi pi-times" onClick={handleResetSearch} />
         </div>
     );
-    const handleSubmitUpload = () => {
 
-    }
 
+
+    const footerContentUpload = (
+        <div>
+            <Button label="Cancel" icon="pi pi-times" onClick={() => setUploadDialogVisible(false)} className="p-button-text" />
+            <Button label="Upload" icon="pi pi-upload" onClick={handleSubmitUpload} />
+        </div>
+    );
+    const renderHeaderUploadDialog = () => {
+        return (
+            <div>
+                <h5>Upload Image</h5>
+            </div>
+        );
+    };
+
+    const handleFileUpload = (event: any) => {
+        const files = event.files;
+        setSelectedFilesUpload(files);
+        setDetailGalleryUploadRequestModel(prev => ({
+            ...prev,
+            fileUpload: files
+        }));
+    };
 
     return (
         <div className="grid">
@@ -355,14 +421,9 @@ export default function GalleryAdmin() {
                                     {data.fileBelongsTo}
                                 </React.Fragment>
                             )}></Column>
-
-
-
-
-
                             <Column header="Status" body={(data: IGalleryModel) => (
                                 <React.Fragment>
-                                    <span className="p-column-title">Status</span>
+                                    <div className="p-column-title">Status</div>
                                     <Tag
                                         value={data.isThumbnail ? "Yes" : "No"}
                                         severity={data.isThumbnail ? "success" : "danger"}
@@ -375,7 +436,7 @@ export default function GalleryAdmin() {
                                     {type && id ? (
                                         <>
                                             <Button icon="pi pi-pencil" rounded severity="success" className="mr-2" onClick={() => openDialogForUpdate(data)} />
-                                            <Button icon="pi pi-trash" rounded severity="danger" className="mr-2" />
+                                            {/* <Button icon="pi pi-trash" rounded severity="danger" className="mr-2" /> */}
                                         </>
                                     ) : null}
                                 </React.Fragment>
@@ -395,7 +456,27 @@ export default function GalleryAdmin() {
                     ></Paginator>
                 </div>
             </div>
-            <Dialog
+
+            <Dialog visible={dialogUploadVisible} style={{ width: '450px' }} header={renderHeaderUploadDialog} modal className="p-fluid"
+                footer={footerContentUpload} onHide={() => setUploadDialogVisible(false)}>
+                <form onSubmit={handleSubmitUpload}>
+                    <div className="field">
+                        <label htmlFor="isThumbnail">Is Thumbnail</label>
+
+                        <Dropdown id="isThumbnail" name="isThumbnail" value={detailGalleryUploadRequestModel.isThumbnail}
+                            options={listIsThumbnailStatus} onChange={(e) => setDetailGalleryUploadRequestModel(prev => ({
+                                ...prev,
+                                isThumbnail: e.value
+                            }))} optionLabel="name" />
+                    </div>
+                    <div className="field">
+                        <label htmlFor="fileUpload">Upload</label>
+                        <FileUpload id="fileUpload" name="fileUpload" customUpload uploadHandler={handleFileUpload} multiple accept="image/*" />
+                    </div>
+                </form>
+            </Dialog>
+
+            {/* <Dialog
                 visible={dialogUploadVisible}
                 header={"Upload image"}
                 style={{ width: "50vw" }}
@@ -408,8 +489,17 @@ export default function GalleryAdmin() {
             >
                 <form onSubmit={handleSubmitUpload} className="grid p-fluid">
                     <div className="field flex col-12">
-                        <FileUpload className="w-full" name="demo[]" url={'/api/upload'} multiple accept="image/*" maxFileSize={1000000} emptyTemplate={<p className="m-0">Drag and drop files to here to upload.</p>} />
+                        <FileUpload className="w-full" name="demo[]" url={'/gallery/add'} multiple accept="image/*" maxFileSize={1000000} emptyTemplate={<p className="m-0">Drag and drop files to here to upload.</p>} />
 
+                    </div>
+
+                    <div className="field">
+                        <label htmlFor="isThumbnail">Is Thumbnail</label>
+                        <Dropdown id="isThumbnail" name="isThumbnail" value={detailGalleryUploadRequestModel.isThumbnail}
+                            options={listIsThumbnailStatus} onChange={(e) => setDetailGalleryUploadRequestModel(prev => ({
+                                ...prev,
+                                isThumbnail: e.value
+                            }))} optionLabel="name" />
                     </div>
 
 
@@ -421,7 +511,11 @@ export default function GalleryAdmin() {
                         }} />
                     </div>
                 </form>
-            </Dialog>
+            </Dialog> */}
+
+
+
+
             <Dialog
                 visible={dialogUpdateVisible}
                 header={`Update image thumbnail`}

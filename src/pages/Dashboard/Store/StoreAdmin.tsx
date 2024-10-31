@@ -140,7 +140,7 @@ export default function StoreAdmin() {
             setShowModelToast({
                 severity: "error",
                 summary: "Error",
-                detail: "Failed to fetch categories",
+                detail: "Failed to fetch stores",
             });
         }
         finally {
@@ -309,7 +309,7 @@ export default function StoreAdmin() {
             setShowModelToast({
                 severity: "error",
                 summary: "Error",
-                detail: "Failed to update category",
+                detail: "Failed to update store",
             });
         }
     };
@@ -317,6 +317,7 @@ export default function StoreAdmin() {
         const { id } = data;
         nav(`/admin/gallery?type=store&id=${id}`)
     }
+
     const { values, errors, touched, handleBlur, handleSubmit, setFieldValue } = useFormik({
         enableReinitialize: true,
         initialValues: {

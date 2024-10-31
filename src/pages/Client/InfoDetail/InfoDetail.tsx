@@ -12,7 +12,7 @@ import InfoDetailReview from "../InfoDetailReview/InfoDetailReview";
 import "./InfoDetail.css";
 import { calculateAverageRating } from "../../../utils/Utilities";
 export default function InfoDetail() {
-    const [isFav, setIsFav] = useState(false);
+
     const { detailStoreItemInfo }: { detailStoreItemInfo: IStoreModel } = useAppSelector(
         (state) => state.storeReducer
     )
@@ -40,15 +40,7 @@ export default function InfoDetail() {
             <div className="card mt-3">
                 <div className="pt-2 flex justify-content-between">
                     <h4>{detailStoreItemInfo.name}</h4>
-                    {!isFav ? (
-                        <a onClick={() => {
-                            setIsFav(true)
-                        }} className=" pi pi-bookmark text-2xl text-blue-300" title="Detail" />
-                    ) : (
-                        <a onClick={() => {
-                            setIsFav(false)
-                        }} className=" pi pi-bookmark-fill top-0 right-0 text-2xl text-blue-300" title="Detail" />
-                    )}
+
 
                 </div>
                 <div className="pt-2 flex gap-2 ">

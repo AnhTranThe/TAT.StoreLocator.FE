@@ -113,3 +113,11 @@ export const validateStore = yup.object().shape({
   latitude: yup.number().typeError("Latitude must be a number"),
   longitude: yup.number().typeError("Longitude must be a number"),
 });
+
+export const validateProduct = yup.object().shape({
+  name: yup
+    .string()
+    .min(1, "Name must be at least 1 character long")
+    .max(50, "Name must be at most 50 characters long")
+    .required("Name is required"),
+});

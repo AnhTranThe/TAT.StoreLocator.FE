@@ -106,7 +106,7 @@ export default function RatingOverview({ type, typeId }: { type: string, typeId:
                         </div>
                     </div>
                     <div className="col-12 md:col-5 flex flex-column justify-content-center align-items-center">
-                        <h2 style={{ fontWeight: "bolder" }}>{calculateAverageRating(detailStoreItemInfo.reviews)}</h2>
+                        <h2 style={{ fontWeight: "bolder" }}>{calculateAverageRating(detailStoreItemInfo.reviews).toFixed(2)}</h2>
                         <Rating value={calculateAverageRating(detailStoreItemInfo.reviews)} readOnly cancel={false} />
                         <p className="pt-4 text-xl">{countSumRating} bài viết</p>
                     </div>
