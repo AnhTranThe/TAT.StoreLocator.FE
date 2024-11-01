@@ -198,8 +198,8 @@ export default function HomeSearch() {
 
             if (res && res.data) {
                 setListProvincesOps(res.data.map((item: IOApiProvinceData) => ({
-                    name: item.ProvinceName,
-                    value: item.ProvinceID
+                    name: item.name,
+                    value: item.id
                 })));
             } else {
                 console.error("Response data is undefined or null for provinces.");
@@ -235,8 +235,8 @@ export default function HomeSearch() {
             const res = await getListDistrictsService(provinceId);
             if (res && res.data) {
                 setListDistrictOps(res.data.map((item: IOApiDistrictData) => ({
-                    name: item.DistrictName,
-                    value: item.DistrictID
+                    name: item.name,
+                    value: item.id
                 })));
             } else {
                 console.error("Response data is undefined or null for districts.");
@@ -251,8 +251,8 @@ export default function HomeSearch() {
             const res = await getListWardsService(districtId);
             if (res && res.data) {
                 setListWardOps(res.data.map((item: IOApiWardData) => ({
-                    name: item.WardName,
-                    value: item.WardCode
+                    name: item.name,
+                    value: item.id
                 })));
             } else {
                 console.error("Response data is undefined or null for wards.");

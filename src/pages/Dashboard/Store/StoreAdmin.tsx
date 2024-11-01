@@ -101,8 +101,8 @@ export default function StoreAdmin() {
         setListProvincesOps((prevList) => [
             ...prevList,
             ...res.data.map((item) => ({
-                name: item.ProvinceName,
-                value: item.ProvinceID
+                name: item.name,
+                value: item.id
             }))
         ]);
     };
@@ -112,8 +112,8 @@ export default function StoreAdmin() {
         setListDistrictOps((prevList) => [
             ...prevList,
             ...res.data.map((item) => ({
-                name: item.DistrictName,
-                value: item.DistrictID
+                name: item.name,
+                value: item.id
             }))
         ]);
 
@@ -124,8 +124,8 @@ export default function StoreAdmin() {
         setListWardOps((prevList) => [
             ...prevList,
             ...res.data.map((item) => ({
-                name: item.WardName,
-                value: item.WardCode
+                name: item.name,
+                value: item.id
             }))
         ]);
     };
