@@ -1,8 +1,7 @@
 import axios from "axios";
 
 // const oApiUrl = "https://open.oapi.vn/location";
-const oApiUrl =
-  "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data";
+const oApiUrl = "https://dev-online-gateway.ghn.vn/shiip-api/master-data";
 const token = import.meta.env.VITE_GHN_TOKEN;
 const apiService = axios.create({
   baseURL: oApiUrl,

@@ -56,7 +56,7 @@ const AppTopbar = forwardRef((_props, ref) => {
             className={`circle-button ${!isDarkTheme ? "p-button-light" : ""}`}
 
           >
-            <img alt="logo" src={"/public/imgs/github-mark.png"} className="icon" />
+            <img alt="logo" src={"/imgs/github-mark.png"} className="icon" />
           </Button>
 
         );
@@ -139,7 +139,7 @@ const AppTopbar = forwardRef((_props, ref) => {
           to="/admin">
           <img
             alt="logo"
-            src="/public/imgs/Logo/logo-white.png"
+            src="/imgs/Logo/logo-white.png"
             className="h-2rem"></img>
           <label className="text-2xl pl-2 cursor-pointer">Store Locator</label>
         </Link>
