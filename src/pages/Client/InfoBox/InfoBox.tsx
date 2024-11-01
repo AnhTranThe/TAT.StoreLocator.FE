@@ -9,8 +9,6 @@ export default function InfoBox() {
         (state) => state.storeReducer
     );
 
-    console.log(listStoresNear);
-
 
     // useEffect(() => {
     //     const updatedStores = updateStoresWithAverageRating(sampleListStores);

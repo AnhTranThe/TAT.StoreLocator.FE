@@ -89,9 +89,9 @@ export default function StoreAdmin() {
     const [listProvincesOps, setListProvincesOps] = useState<ISelectBoxValueModel[]>([]);
     const [listDistrictOps, setListDistrictOps] = useState<ISelectBoxValueModel[]>([]);
     const [listWardOps, setListWardOps] = useState<ISelectBoxValueModel[]>([]);
-    const [selectProvinceOp, setSelectProvinceOp] = useState<string | boolean>('');
-    const [selectDistrictOp, setSelectDistrictOp] = useState<string | boolean>('');
-    const [selectWardOp, setSelectWardOp] = useState<string | boolean>('');
+    const [selectProvinceOp, setSelectProvinceOp] = useState<string | boolean | number>('');
+    const [selectDistrictOp, setSelectDistrictOp] = useState<string | boolean | number>('');
+    const [selectWardOp, setSelectWardOp] = useState<string | boolean | number>('');
     const [selectUpdateStoreId, setUpdateStoreId] = useState<string>("");
 
 
@@ -101,8 +101,8 @@ export default function StoreAdmin() {
         setListProvincesOps((prevList) => [
             ...prevList,
             ...res.data.map((item) => ({
-                name: item.name,
-                value: item.id
+                name: item.ProvinceName,
+                value: item.ProvinceID
             }))
         ]);
     };
@@ -112,8 +112,8 @@ export default function StoreAdmin() {
         setListDistrictOps((prevList) => [
             ...prevList,
             ...res.data.map((item) => ({
-                name: item.name,
-                value: item.id
+                name: item.DistrictName,
+                value: item.DistrictID
             }))
         ]);
 
@@ -124,8 +124,8 @@ export default function StoreAdmin() {
         setListWardOps((prevList) => [
             ...prevList,
             ...res.data.map((item) => ({
-                name: item.name,
-                value: item.id
+                name: item.WardName,
+                value: item.WardCode
             }))
         ]);
     };

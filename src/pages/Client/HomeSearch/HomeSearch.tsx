@@ -74,9 +74,7 @@ export default function HomeSearch() {
     const [listWardOps, setListWardOps] = useState<ISelectBoxValueModel[]>([]);
     const { setShowModelToast } = useContext<IToastValueContext>(ToastContext);
     const dispatch = useAppDispatch();
-    console.log(detailStoreGetNearRequest);
-
-
+    // console.log(detailStoreGetNearRequest);
     const selectedFilterDropDownTemplate = (option: ISelectBoxValueModel, props: any) => {
         if (option) {
             return (
@@ -157,7 +155,6 @@ export default function HomeSearch() {
                         keyWord: searchValue,
                         categories: detailStoreGetNearRequest.categories
                     };
-                    console.log(request);
 
 
 
@@ -198,10 +195,11 @@ export default function HomeSearch() {
         setListProvincesOps([]);
         try {
             const res = await getListProvincesService();
+
             if (res && res.data) {
                 setListProvincesOps(res.data.map((item: IOApiProvinceData) => ({
-                    name: item.name,
-                    value: item.id
+                    name: item.ProvinceName,
+                    value: item.ProvinceID
                 })));
             } else {
                 console.error("Response data is undefined or null for provinces.");
@@ -237,8 +235,8 @@ export default function HomeSearch() {
             const res = await getListDistrictsService(provinceId);
             if (res && res.data) {
                 setListDistrictOps(res.data.map((item: IOApiDistrictData) => ({
-                    name: item.name,
-                    value: item.id
+                    name: item.DistrictName,
+                    value: item.DistrictID
                 })));
             } else {
                 console.error("Response data is undefined or null for districts.");
@@ -253,8 +251,8 @@ export default function HomeSearch() {
             const res = await getListWardsService(districtId);
             if (res && res.data) {
                 setListWardOps(res.data.map((item: IOApiWardData) => ({
-                    name: item.name,
-                    value: item.id
+                    name: item.WardName,
+                    value: item.WardCode
                 })));
             } else {
                 console.error("Response data is undefined or null for wards.");
@@ -273,7 +271,7 @@ export default function HomeSearch() {
     //     setListCategoriesOps
     // }, [])
     return (
-        <StyledSection isdarktheme={isDarkTheme.toString()}>
+        <StyledSection isdarktheme={isDarkTheme ? isDarkTheme.toString() : "false"}>
             <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 flex flex-column justify-content-center">
                 <div className="text-center pt-8">
                     <h1
@@ -322,6 +320,7 @@ export default function HomeSearch() {
 
                                 <Dropdown className="w-full"
                                     value={selectProvinceOp} onChange={(e) => {
+
                                         const selectedValue = e.value;
                                         const selectedProvince = listProvincesOps.find(op => op.value === selectedValue);
                                         setSelectProvinceOp(e.value)

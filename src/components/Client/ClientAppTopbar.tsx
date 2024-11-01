@@ -262,7 +262,7 @@ export default function ClientAppTopbar() {
   ];
   return (
     <>
-      <StyledHeader className="mx-auto md:px-3 md:py-3 sm: px-1 sm: py-1 " isdarktheme={isDarkTheme.toString() ?? 'true'} >
+      <StyledHeader className="mx-auto md:px-3 md:py-3 sm: px-1 sm: py-1 " isdarktheme={isDarkTheme ? isDarkTheme.toString() : 'false'} >
         <div className="relative flex h-3rem  align-items-center w-full ">
           {/* Content for mobile screens */}
           <div className="main-menu-mobile-mode w-full">
@@ -292,7 +292,7 @@ export default function ClientAppTopbar() {
                 <Sidebar
                   visible={isMobileMenuOpen}
                   onHide={() => setIsMobileMenuOpen(false)}
-                  content={({ closeIconRef, hide }) => (
+                  content={({ closeIconRef, hide }: { closeIconRef: any, hide: any }) => (
                     <div className="flex relative h-full ">
                       <div className="surface-section w-full" >
                         <div className="flex flex-column h-full">

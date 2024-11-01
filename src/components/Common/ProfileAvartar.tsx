@@ -2,7 +2,7 @@ import { Avatar } from "primereact/avatar";
 
 export default function ProfileAvartar({ size, userName }: { size?: "normal" | "large" | "xlarge" | undefined, userName: string }) {
 
-    const firstCharacter = userName.charAt(0).toUpperCase();
+    const firstCharacter = userName ? userName.charAt(0).toUpperCase() : "";
     return (
         <Avatar
             label={firstCharacter}

@@ -1,7 +1,9 @@
-import { generateRandomImageMock } from "./../utils/Utilities";
-import { IStoreModel } from "../models/storeModel";
 import { EReviewStatusType } from "../enums";
-
+import { IRatingStoreModel, IStoreModel } from "../models/storeModel";
+const emptyRatingStore: IRatingStoreModel = {
+  numberRating: 0,
+  pointOfRating: 0,
+};
 export const sampleListStores: IStoreModel[] = [
   {
     id: "store-1",
@@ -48,97 +50,9 @@ export const sampleListStores: IStoreModel[] = [
         status: EReviewStatusType.Approve,
       },
     ],
-    galleries: [
-      {
-        id: "gallery-1-store-1",
-        url: generateRandomImageMock(),
-        isThumbnail: true,
-      },
-      {
-        id: "gallery-2-store-1",
-        url: generateRandomImageMock(),
-        isThumbnail: false,
-      },
-      {
-        id: "gallery-3-store-1",
-        url: generateRandomImageMock(),
-        isThumbnail: false,
-      },
-      {
-        id: "gallery-4-store-1",
-        url: generateRandomImageMock(),
-        isThumbnail: false,
-      },
-    ],
-    products: [
-      {
-        id: "product-1-store-1",
-        name: "product-1-store-1",
-        rating: 4,
-        price: 30000000,
-        quantity: 10,
-        isActive: true,
-        galleries: [
-          {
-            id: "gallery-1-product-1-store-1",
-            url: generateRandomImageMock(),
-            isThumbnail: true,
-          },
-          {
-            id: "gallery-2-product-1-store-1",
-            url: generateRandomImageMock(),
-            isThumbnail: false,
-          },
-        ],
-      },
-      {
-        id: "product-2-store-1",
-        name: "product-2-store-1",
-        rating: 3,
-        isActive: true,
-        galleries: [
-          {
-            id: "gallery-1-product-2-store-1",
-            url: generateRandomImageMock(),
-            isThumbnail: true,
-          },
-          {
-            id: "gallery-2-product-2-store-1",
-            url: generateRandomImageMock(),
-            isThumbnail: false,
-          },
-          {
-            id: "gallery-3-product-2-store-1",
-            url: generateRandomImageMock(),
-            isThumbnail: false,
-          },
-        ],
-      },
-      {
-        id: "product-3-store-1",
-        name: "product-3-store-1",
-        rating: 3,
-        isActive: true,
-        galleries: [
-          {
-            id: "gallery-1-product-3-store-1",
-            url: generateRandomImageMock(),
-            isThumbnail: true,
-          },
-          {
-            id: "gallery-2-product-3-store-1",
-            url: generateRandomImageMock(),
-            isThumbnail: true,
-          },
-          {
-            id: "gallery-3-product-3-store-1",
-            url: generateRandomImageMock(),
-            isThumbnail: false,
-          },
-        ],
-      },
-    ],
-    wishlists: [],
+    mapGalleryStores: [],
+    ratingStore: emptyRatingStore,
+    isActive: true,
   },
   {
     id: "store-2",
@@ -187,49 +101,9 @@ export const sampleListStores: IStoreModel[] = [
         status: EReviewStatusType.Approve,
       },
     ],
-    galleries: [
-      {
-        id: "gallery-1-store-2",
-        url: generateRandomImageMock(),
-        isThumbnail: true,
-      },
-      {
-        id: "gallery-2-store-2",
-        url: generateRandomImageMock(),
-        isThumbnail: false,
-      },
-      {
-        id: "gallery-3-store-2",
-        url: generateRandomImageMock(),
-        isThumbnail: false,
-      },
-      {
-        id: "gallery-4-store-2",
-        url: generateRandomImageMock(),
-        isThumbnail: false,
-      },
-    ],
-    products: [
-      {
-        id: "product-1-store-2",
-        name: "",
-        rating: 4,
-        isActive: true,
-        galleries: [
-          {
-            id: "gallery-1-product-1-store-2",
-            url: generateRandomImageMock(),
-            isThumbnail: false,
-          },
-          {
-            id: "gallery-1-product-1-store-2",
-            url: generateRandomImageMock(),
-            isThumbnail: false,
-          },
-        ],
-      },
-    ],
-    wishlists: [],
+    mapGalleryStores: [],
+    ratingStore: emptyRatingStore,
+    isActive: true,
   },
   {
     id: "store-3",
@@ -261,49 +135,9 @@ export const sampleListStores: IStoreModel[] = [
       latitude: 10.7657521,
       longitude: 106.6368435,
     },
-    galleries: [
-      {
-        id: "gallery-1-store-3",
-        url: generateRandomImageMock(),
-        isThumbnail: false,
-      },
-      {
-        id: "gallery-2-store-3",
-        url: generateRandomImageMock(),
-        isThumbnail: false,
-      },
-      {
-        id: "gallery-3-store-3",
-        url: generateRandomImageMock(),
-        isThumbnail: false,
-      },
-      {
-        id: "gallery-4-store-3",
-        url: generateRandomImageMock(),
-        isThumbnail: false,
-      },
-    ],
-    products: [
-      {
-        id: "product-1-store-3",
-        name: "",
-        rating: 4,
-        isActive: true,
-        galleries: [
-          {
-            id: "gallery-1-product-1-store-3",
-            url: generateRandomImageMock(),
-            isThumbnail: false,
-          },
-          {
-            id: "gallery-2-product-1-store-3",
-            url: generateRandomImageMock(),
-            isThumbnail: false,
-          },
-        ],
-      },
-    ],
-    wishlists: [],
+    mapGalleryStores: [],
+    ratingStore: emptyRatingStore,
+    isActive: true,
   },
   {
     id: "store-4",
@@ -321,48 +155,8 @@ export const sampleListStores: IStoreModel[] = [
       longitude: 105.8785253,
     },
     reviews: [],
-    galleries: [
-      {
-        id: "gallery-1-store-4",
-        url: generateRandomImageMock(),
-        isThumbnail: false,
-      },
-      {
-        id: "gallery-2-store-4",
-        url: generateRandomImageMock(),
-        isThumbnail: false,
-      },
-      {
-        id: "gallery-3-store-4",
-        url: generateRandomImageMock(),
-        isThumbnail: false,
-      },
-      {
-        id: "gallery-4-store-4",
-        url: generateRandomImageMock(),
-        isThumbnail: false,
-      },
-    ],
-    products: [
-      {
-        id: "product-1-store-4",
-        name: "",
-        rating: 4,
-        isActive: true,
-        galleries: [
-          {
-            id: "gallery-1-product-1-store-4",
-            url: generateRandomImageMock(),
-            isThumbnail: false,
-          },
-          {
-            id: "gallery-2-product-1-store-4",
-            url: generateRandomImageMock(),
-            isThumbnail: false,
-          },
-        ],
-      },
-    ],
-    wishlists: [],
+    mapGalleryStores: [],
+    ratingStore: emptyRatingStore,
+    isActive: true,
   },
 ];

@@ -1,41 +1,40 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface IOApiProvinceModel {
-    total: number
+    code: number
+    message: string
     data: IOApiProvinceData[]
-    code: string
-    message: any
 }
 export interface IOApiProvinceData {
-    id: string
-    name: string
-    type: number
-    typeText: string
-    slug: string
+    ProvinceID: number
+    ProvinceName: string
+    CountryID: number
+    Code: string
+    NameExtension: string[]
 }
 export interface IOApiDistrictModel {
-    total: number
+
     data: IOApiDistrictData[]
-    code: string
-    message: any
+    code: number
+    message: string
 }
 export interface IOApiDistrictData {
-    id: string
-    name: string
-    provinceId: string
-    type: number
-    typeText: string
+    DistrictID: number
+    ProvinceID: number
+    DistrictName: string
+    Code: string
+    Type: number
+    SupportType: number
+    NameExtension: string[]
 }
 
 export interface IOApiWardModel {
-    total: number
     data: IOApiWardData[]
-    code: string
-    message: any
+    code: number
+    message: string
 }
 export interface IOApiWardData {
-    id: string
-    name: string
-    districtId: string
-    type: number
-    typeText: string
+    WardCode: string
+    DistrictID: number
+    WardName: string
+    NameExtension: string[]
 }

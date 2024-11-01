@@ -70,7 +70,7 @@ export default function MapRender() {
 
     }, [listStoresNear]);
 
-    console.log(selectedStore);
+    //  console.log(selectedStore);
 
 
 

@@ -13,6 +13,7 @@ export interface IGalleryModel extends IBaseEntityModel {
 }
 export interface IMapGalleryStoreModel {
   galleryId: string;
+  key?: string;
   fileName: string;
   url: string;
   isThumbnail: boolean;
